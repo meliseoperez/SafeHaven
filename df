@@ -1,0 +1,26 @@
+[33mcommit e020cd69217cfae7f2351cc15df9b9d7afcacc08[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: meplav120 <meperezlavandeira@gmail.com>
+Date:   Sat Oct 14 19:41:30 2023 +0200
+
+    Añadiendo código para descargar y almacenar alertas XML
+
+[33mcommit 9b5c9921abb15f31ea3aa6ae8292de0a6ecb5b82[m[33m ([m[1;31mgithub/main[m[33m)[m
+Merge: a08d42e 0362503
+Author: meliseoperez <147545852+meliseoperez@users.noreply.github.com>
+Date:   Tue Oct 10 20:45:53 2023 +0200
+
+    Merge pull request #2 from voghDev/upgrade-sdk-version
+    
+    chore: Upgrade sdk version to 33
+
+[33mcommit 03625030b6df0bfef522622e2714d7e1d57bc877[m
+Author: Olmo Gallegos <vendofiatpunto@hotmail.com>
+Date:   Tue Oct 10 20:44:09 2023 +0200
+
+    chore: Upgrade sdk version to 33
+
+[33mcommit a08d42eccffca09b19d6595c690bd5e3fe2ebc1d[m
+Author: meplav120 <meperezlavandeira@gmail.com>
+Date:   Tue Oct 10 20:25:38 2023 +0200
+
+    inital commit
