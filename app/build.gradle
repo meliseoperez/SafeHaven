@@ -21,22 +21,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-        flavorDimensions "default"
-
-        productFlavors {
-            production {
-                Properties prop = new Properties()
-                prop.load(project.rootProject.file('local.properties').newDataInputStream())
-                def apiKey = prop.get("googleMapsAPIKey", null)
-                if (apiKey == null)
-                    throw new GradleException("Can't find apiKey in local.properties. Please set it to your Google Maps Api key");
-
-                buildConfigField("String", "GoogleMapsApiKey", "\"${apiKey}\"")
-
-                dimension "default"
-            }
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
