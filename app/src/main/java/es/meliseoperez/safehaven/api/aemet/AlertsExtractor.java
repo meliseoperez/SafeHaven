@@ -1,4 +1,4 @@
-package es.meliseoperez.safehaven.api;
+package es.meliseoperez.safehaven.api.aemet;
 
 import android.content.Context;
 import android.util.Log;
@@ -102,7 +102,7 @@ public class AlertsExtractor {
         }
     }
 
-    // Clase interna representando la información de una alerta.
+  /*  // Clase interna representando la información de una alerta.
     static class AlertInfo {
         String effective;
         String onset;
@@ -125,5 +125,5 @@ public class AlertsExtractor {
                     ", instruction='" + instruction + '\'' +
                     '}';
         }
-    }
+    }*/
 }

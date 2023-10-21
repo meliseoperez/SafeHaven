@@ -1,4 +1,4 @@
-package es.meliseoperez.safehaven.api;
+package es.meliseoperez.safehaven.api.aemet;
 
 import android.content.Context;
 import android.util.Log;

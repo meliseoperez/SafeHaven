@@ -10,9 +10,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
 import es.meliseoperez.safehaven.R;
-import es.meliseoperez.safehaven.api.DownloadAndStoreXMLAlerts;
-import es.meliseoperez.safehaven.api.AlertXMLHandler;
-import es.meliseoperez.safehaven.api.AlertsExtractor;
+import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreXMLAlerts;
+import es.meliseoperez.safehaven.api.aemet.AlertXMLHandler;
+import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
+import es.meliseoperez.safehaven.api.googlemaps.MapsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);  // Define la UI a partir del archivo XML de diseño.
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MapsFragment())
+                    .commit();
+        }
 
         // Al iniciar la actividad, directamente se intenta la obtención de datos desde la API, ya que no necesitamos permisos especiales.
         fetchDataFromApi();
