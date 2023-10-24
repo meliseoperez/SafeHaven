@@ -1,13 +1,15 @@
 package es.meliseoperez.safehaven.api.aemet;
 
 public class AlertInfo {
-    String effective;
-    String onset;
-    String expires;
-    String senderName;
-    String headline;
-    String description;
-    String instruction;
+    public String effective;
+    public String onset;
+    public String expires;
+    public String senderName;
+    public String headline;
+    public String description;
+    public String instruction;
+    public String language;
+    public String polygon;
 
     @Override
     public String toString() {
@@ -20,6 +22,8 @@ public class AlertInfo {
                 ", headline='" + headline + '\'' +
                 ", description='" + description + '\'' +
                 ", instruction='" + instruction + '\'' +
+                ", language='" + language + '\'' +
+                ", polygon='" + polygon + '\'' +
                 '}';
     }
 

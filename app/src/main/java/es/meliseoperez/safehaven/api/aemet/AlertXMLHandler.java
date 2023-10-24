@@ -14,10 +14,11 @@ public class AlertXMLHandler {
 
     // Constructor que requiere el contexto de la actividad/fragmento que lo invoca
     public AlertXMLHandler(Context context) {
+
         this.context = context;
     }
 
-    public void processAndSaveXML() {
+    public void processAndSaveXML(MyCallBack myCallBack) {
         // Obtener el directorio de archivos internos de la aplicación
         File directory = context.getFilesDir();
         // Crear un archivo apuntando al archivo XML que queremos leer
@@ -42,7 +43,7 @@ public class AlertXMLHandler {
             }
 
             // Eliminar líneas específicas que coinciden con un patrón
-            String patternString = "^Z_CAP_C_LEMM_.*$";
+            String patternString = "Z_CAP_C_LEMM_.*";
             Pattern pattern = Pattern.compile(patternString, Pattern.MULTILINE);
             String[] lines = dataResponseBody.split("\n");
             StringBuilder sb = new StringBuilder();
@@ -59,12 +60,14 @@ public class AlertXMLHandler {
 
             // Sobrescribir el archivo con el contenido modificado
             writeFile(file, xmlContent);
+            writeAndDisplayPath(xmlContent);
+
 
         } catch (IOException e) {
-            Log.e(TAG, "Error procesando archivo XML.", e);
+            Log.e(TAG, "****************Error procesando archivo XML.", e);
         }
-
-        Log.i(TAG, "Archivo XML procesado correctamente.");
+        myCallBack.onCompleted();
+        Log.i(TAG, "*************Archivo XML procesado correctamente.");
     }
 
     // Método helper para leer un archivo y convertirlo en String
@@ -84,6 +87,31 @@ public class AlertXMLHandler {
         try (FileOutputStream outputStream = new FileOutputStream(file, false)) { // false indica que queremos sobrescribir el archivo existente
             outputStream.write(content.getBytes());
             outputStream.flush();
+
         }
     }
+
+    public void writeAndDisplayPath(String content) throws IOException {
+        // Especificar el nombre del nuevo archivo
+        String newFileName = "alertas_procesadas.xml";
+
+        // Crear un archivo en la memoria interna del dispositivo.
+        // Estamos utilizando el método getFilesDir() que proporciona el directorio interno de la aplicación
+        File directory = context.getFilesDir();
+
+        // Crear un nuevo objeto File que representa el archivo que se va a crear/guardar
+        File newFile = new File(directory, newFileName);
+
+        // Usar try-with-resources para el FileOutputStream para asegurar que se cierra correctamente
+        try (FileOutputStream outputStream = new FileOutputStream(newFile, false)) { // false para sobrescribir
+            // Convertir el contenido a bytes y escribirlos en el archivo
+            outputStream.write(content.getBytes());
+            outputStream.flush();
+        }
+
+        // Mostrar la ruta del archivo. El método getCanonicalPath() arroja una IOException, así que
+        // está incluido en la declaración de 'throws' del método
+        Log.i(TAG, "*************El archivo se ha guardado en: " + newFile.getCanonicalPath());
+    }
+
 }

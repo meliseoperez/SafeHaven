@@ -16,7 +16,7 @@ public class DownloadAndStoreXMLAlerts {
 
     public static final String TAG = "DownloadStoreXMLAlerts"; // Etiqueta para logs
 
-    public void downloadData(Context context) {
+    public void downloadData(MyCallBack myCallback,Context context) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
             String apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZXBlcmV6bGF2YW5kZWlyYUBnbWFpbC5jb20iLCJqdGkiOiJkYjk3Y2UzYy1hNDc5LTQzOTItYjgzNi1mMGZmNzM3M2U3YzYiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTY5NjMyOTAxMywidXNlcklkIjoiZGI5N2NlM2MtYTQ3OS00MzkyLWI4MzYtZjBmZjczNzNlN2M2Iiwicm9sZSI6IiJ9.BQDnZISF0QfkCvBYEmCJbyvPZgw_5ayn2YZzMXntcjM";
@@ -72,11 +72,12 @@ public class DownloadAndStoreXMLAlerts {
                         String processedContent = processXMLContent(xmlData); // Si existe esta función
                         saveToFile(processedContent, "alertas.xml", context);
                     }
-
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error durante la descarga de datos", e);
+
             }
+            myCallback.onCompleted();
         }).start();
     }
 

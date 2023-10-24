@@ -19,12 +19,12 @@ public class AlertsExtractor {
         this.context = context;
     }
 
-    public void extractAlertsInfo() {
+    public List<AlertInfo> extractAlertsInfo() {
         List<AlertInfo> alerts = new ArrayList<>();  // Lista para almacenar las alertas extraídas.
 
         try {
             // Obtener el archivo XML de los archivos internos de la app.
-            File xmlFile = new File(context.getFilesDir(), "alertas.xml");
+            File xmlFile = new File(context.getFilesDir(), "alertas_procesadas.xml");
             FileInputStream fis = new FileInputStream(xmlFile);
 
             // Configurar XmlPullParser para analizar el archivo XML.
@@ -66,6 +66,12 @@ public class AlertsExtractor {
                             case "instruction":
                                 currentAlert.instruction = parser.nextText();
                                 break;
+                            case "language":  // Añadiendo el campo language
+                                currentAlert.language = parser.nextText();
+                                break;
+                            case "polygon":  // Añadiendo el campo polygon
+                                currentAlert.polygon = parser.nextText();
+                                break;
                         }
                     }
                 } else if (eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("alert") && currentAlert != null) {
@@ -78,52 +84,32 @@ public class AlertsExtractor {
 
             fis.close(); // Importante: cerrar el flujo de entrada después de usarlo.
             // Bucle para recorrer todas las alertas extraídas y mostrar la información.
-            for (AlertInfo alert : alerts) {
-                // Usar el método Log.i o Log.d para mostrar la información en la consola.
-                Log.i(TAG, "---------- Alerta Extraída ----------");
-                Log.i(TAG, "Effective: " + alert.effective);
-                Log.i(TAG, "Onset: " + alert.onset);
-                Log.i(TAG, "Expires: " + alert.expires);
-                Log.i(TAG, "Sender Name: " + alert.senderName);
-                Log.i(TAG, "Headline: " + alert.headline);
-                Log.i(TAG, "Description: " + alert.description);
-                Log.i(TAG, "Instruction: " + alert.instruction);
-                Log.i(TAG, "-------------------------------------");
-            }
-            // Aquí puedes manejar la lista de alertas, como enviarla a una base de datos, etc.
-            //for (AlertInfo alert : alerts) {
-            //    Log.i(TAG, alert.toString());
-            //}
+//            for (AlertInfo alert : alerts) {
+//                // Usar el método Log.i o Log.d para mostrar la información en la consola.
+//                Log.i(TAG, "---------- Alerta Extraída ----------");
+//                Log.i(TAG, "Effective: " + alert.effective);
+//                Log.i(TAG, "Onset: " + alert.onset);
+//                Log.i(TAG, "Expires: " + alert.expires);
+//                Log.i(TAG, "Sender Name: " + alert.senderName);
+//                Log.i(TAG, "Headline: " + alert.headline);
+//                Log.i(TAG, "Description: " + alert.description);
+//                Log.i(TAG, "Instruction: " + alert.instruction);
+//                Log.i(TAG, "language: " + alert.language);
+//                Log.i(TAG, "Polygon: " + alert.polygon);
+//                Log.i(TAG, "-------------------------------------");
+//            }
+//            // Aquí puedes manejar la lista de alertas, como enviarla a una base de datos, etc.
+//            for (AlertInfo alert : alerts) {
+//                Log.i(TAG, alert.toString());
+//            }
 
             Log.i(TAG, "All alerts extracted successfully.");
 
         } catch (Exception e) {
             Log.e(TAG, "Error al extraer información de las alertas", e);
         }
+        return alerts;
     }
 
-  /*  // Clase interna representando la información de una alerta.
-    static class AlertInfo {
-        String effective;
-        String onset;
-        String expires;
-        String senderName;
-        String headline;
-        String description;
-        String instruction;
 
-        @Override
-        public String toString() {
-            // Formato personalizado para la impresión de información de alerta.
-            return "AlertInfo{" +
-                    "effective='" + effective + '\'' +
-                    ", onset='" + onset + '\'' +
-                    ", expires='" + expires + '\'' +
-                    ", senderName='" + senderName + '\'' +
-                    ", headline='" + headline + '\'' +
-                    ", description='" + description + '\'' +
-                    ", instruction='" + instruction + '\'' +
-                    '}';
-        }
-    }*/
 }
