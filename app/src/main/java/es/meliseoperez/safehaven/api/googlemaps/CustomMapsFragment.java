@@ -38,6 +38,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
+    private boolean firsLocationUpdate=true;
     private Marker myLocationMarker;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private List<Marker> zoneMarkers = new ArrayList<>();
@@ -69,9 +70,12 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                     } else {
                         myLocationMarker.setPosition(currentLocation);
                     }
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
-                }
 
+                    if (firsLocationUpdate) {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
+                        firsLocationUpdate=false;
+                    }
+                }
             }
         };
 
