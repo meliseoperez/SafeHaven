@@ -10,7 +10,7 @@ public class AlertXMLHandler {
     private static final String FILE_NAME = "alertas.xml"; // Este es el nombre del archivo que vamos a procesar
     private static final String TAG = "AlertXMLHandler"; // Etiqueta para los mensajes de log
 
-    private Context context; // Contexto de la aplicación, necesario para acceder a sus archivos internos
+    private final Context context; // Contexto de la aplicación, necesario para acceder a sus archivos internos
 
     // Constructor que requiere el contexto de la actividad/fragmento que lo invoca
     public AlertXMLHandler(Context context) {
@@ -101,6 +101,10 @@ public class AlertXMLHandler {
 
         // Crear un nuevo objeto File que representa el archivo que se va a crear/guardar
         File newFile = new File(directory, newFileName);
+        // Verificar si el archivo ya existe y, en caso afirmativo, eliminarlo.
+        if (newFile.exists()) {
+            newFile.delete();
+        }
 
         // Usar try-with-resources para el FileOutputStream para asegurar que se cierra correctamente
         try (FileOutputStream outputStream = new FileOutputStream(newFile, false)) { // false para sobrescribir

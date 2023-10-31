@@ -89,6 +89,10 @@ public class DownloadAndStoreXMLAlerts {
     private void saveToFile(String content, String fileName, Context context) {
         File file = new File(context.getFilesDir(), fileName);
 
+        //Verifico si el archivo ya existe, en caso afirmativo, lo elimina.
+        if(file.exists()){
+            file.delete();
+        }
         try (FileOutputStream outputStream = new FileOutputStream(file);
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
             writer.write(content);

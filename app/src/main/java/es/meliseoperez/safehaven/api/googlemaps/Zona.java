@@ -9,16 +9,19 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class Zona {
-    // Lista que almacena las coordenadas de la zona.
-    private List<LatLng> coordenadas;
+
+    private final List<LatLng> coordenadas;// Lista que almacena las coordenadas de la zona.
+    private final String nombre; // Nombre de la zona
+
 
     /**
      * Constructor que recibe un String con las coordenadas.
      * @param data String con las coordenadas en formato "latitud,longitud".
      */
-    public Zona(String data) {
+    public Zona(String data,String nombre) {
         coordenadas = new ArrayList<>();
         procesarDatos(data); // Llamada al método que procesa el String de datos.
+        this.nombre = nombre;
     }
 
     /**
