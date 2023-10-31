@@ -2,114 +2,117 @@ package es.meliseoperez.safehaven.api.aemet;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.Xml;
-import org.xmlpull.v1.XmlPullParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class AlertsExtractor {
 
+    // Constante utilizada para logs.
     private static final String TAG = "AlertsExtractor";
-    private Context context;
+    private final Context context;
 
-    // Constructor que acepta el contexto, necesario para operaciones de archivo.
+    // Constructor que toma el contexto de la actividad o aplicación.
     public AlertsExtractor(Context context) {
         this.context = context;
     }
 
+    // Método principal para extraer información de alertas.
     public List<AlertInfo> extractAlertsInfo() {
-        List<AlertInfo> alerts = new ArrayList<>();  // Lista para almacenar las alertas extraídas.
+        // Lista para almacenar las alertas extraídas.
+        List<AlertInfo> alerts = new ArrayList<>();
 
         try {
-            // Obtener el archivo XML de los archivos internos de la app.
+            // Ubicación del archivo XML en el almacenamiento interno.
             File xmlFile = new File(context.getFilesDir(), "alertas_procesadas.xml");
-            FileInputStream fis = new FileInputStream(xmlFile);
 
-            // Configurar XmlPullParser para analizar el archivo XML.
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(fis, null);
+            // Configurando la fábrica para el analizador de documentos.
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(xmlFile);
 
-            // Comenzar a analizar el documento XML.
-            int eventType = parser.getEventType();
-            AlertInfo currentAlert = null;
+            // Obteniendo la lista de nodos "alert" del documento.
+            NodeList alertList = doc.getElementsByTagName("alert");
 
-            // Continuar hasta el final del documento XML.
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    if (parser.getName().equalsIgnoreCase("alert")) {
-                        currentAlert = new AlertInfo(); // Nuevo objeto para almacenar info de la alerta actual.
-                        Log.i(TAG, "Extracting alert info...");
-                    } else if (currentAlert != null) {
-                        // Dependiendo del nombre de la etiqueta, almacenar la información en el objeto.
-                        switch (parser.getName().toLowerCase()) {
-                            case "effective":
-                                currentAlert.effective = parser.nextText();
-                                break;
-                            case "onset":
-                                currentAlert.onset = parser.nextText();
-                                break;
-                            case "expires":
-                                currentAlert.expires = parser.nextText();
-                                break;
-                            case "sendername":
-                                currentAlert.senderName = parser.nextText();
-                                break;
-                            case "headline":
-                                currentAlert.headline = parser.nextText();
-                                break;
-                            case "description":
-                                currentAlert.description = parser.nextText();
-                                break;
-                            case "instruction":
-                                currentAlert.instruction = parser.nextText();
-                                break;
-                            case "language":  // Añadiendo el campo language
-                                currentAlert.language = parser.nextText();
-                                break;
-                            case "polygon":  // Añadiendo el campo polygon
-                                currentAlert.polygon = parser.nextText();
-                                break;
-                        }
+            // Iterando a través de cada nodo "alert".
+            for (int i = 0; i < alertList.getLength(); i++) {
+                Node alertNode = alertList.item(i);
+
+                // Asegurándonos de que estamos tratando con un nodo de tipo ELEMENT.
+                if (alertNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element alertElement = (Element) alertNode;
+                    String language = getTagValue("language", alertElement);
+
+                    // Solo estamos interesados en alertas en español ("es-ES").
+                    if ("es-ES".equalsIgnoreCase(language)) {
+                        AlertInfo currentAlert = new AlertInfo();
+                        // Extrayendo y configurando los valores de los diferentes tags.
+                        currentAlert.effective = getTagValue("effective", alertElement);
+                        currentAlert.onset = getTagValue("onset", alertElement);
+                        currentAlert.expires = getTagValue("expires", alertElement);
+                        currentAlert.senderName = getTagValue("sendername", alertElement);
+                        currentAlert.headline = getTagValue("headline", alertElement);
+                        currentAlert.description = getTagValue("description", alertElement);
+                        currentAlert.instruction = getTagValue("instruction", alertElement);
+                        currentAlert.language = language;
+                        currentAlert.polygon = getTagValue("polygon", alertElement);
+
+                        // Añadiendo la alerta extraída a la lista.
+                        alerts.add(currentAlert);
                     }
-                } else if (eventType == XmlPullParser.END_TAG && parser.getName().equalsIgnoreCase("alert") && currentAlert != null) {
-                    alerts.add(currentAlert); // Agregar la alerta completada a la lista.
-                    Log.i(TAG, "Alert info extracted successfully.");
                 }
-
-                eventType = parser.next(); // Avanzar al siguiente evento de parseo.
             }
 
-            fis.close(); // Importante: cerrar el flujo de entrada después de usarlo.
-            // Bucle para recorrer todas las alertas extraídas y mostrar la información.
-//            for (AlertInfo alert : alerts) {
-//                // Usar el método Log.i o Log.d para mostrar la información en la consola.
-//                Log.i(TAG, "---------- Alerta Extraída ----------");
-//                Log.i(TAG, "Effective: " + alert.effective);
-//                Log.i(TAG, "Onset: " + alert.onset);
-//                Log.i(TAG, "Expires: " + alert.expires);
-//                Log.i(TAG, "Sender Name: " + alert.senderName);
-//                Log.i(TAG, "Headline: " + alert.headline);
-//                Log.i(TAG, "Description: " + alert.description);
-//                Log.i(TAG, "Instruction: " + alert.instruction);
-//                Log.i(TAG, "language: " + alert.language);
-//                Log.i(TAG, "Polygon: " + alert.polygon);
-//                Log.i(TAG, "-------------------------------------");
-//            }
-//            // Aquí puedes manejar la lista de alertas, como enviarla a una base de datos, etc.
-//            for (AlertInfo alert : alerts) {
-//                Log.i(TAG, alert.toString());
-//            }
-
-            Log.i(TAG, "All alerts extracted successfully.");
-
         } catch (Exception e) {
+            // En caso de cualquier excepción, registra el error.
             Log.e(TAG, "Error al extraer información de las alertas", e);
         }
+
+        // Muestra las alertas extraídas en el log.
+        displayAlerts(alerts);
         return alerts;
     }
 
+    // Método auxiliar para obtener el valor de un tag específico de un elemento.
+    private String getTagValue(String tag, Element element) {
+        NodeList nodeList = element.getElementsByTagName(tag);
+        if (nodeList.getLength() > 0 && nodeList.item(0).hasChildNodes()) {
+            Node node = (Node) nodeList.item(0).getChildNodes().item(0);
+            return node.getNodeValue();
+        } else {
+            // Devuelve null si el tag no tiene valor.
+            return null;
+        }
+    }
+
+    // Método para mostrar la información de las alertas en el log.
+    public void displayAlerts(List<AlertInfo> alerts) {
+        if (alerts == null || alerts.isEmpty()) {
+            Log.i(TAG, "No hay alertas para mostrar.");
+            return;
+        }
+
+        Log.i(TAG, "===== Mostrando Alertas =====");
+        for (AlertInfo alert : alerts) {
+            // Mostrando cada detalle de la alerta.
+            Log.i(TAG, "----------------------------------");
+            Log.i(TAG, "Effective: " + alert.effective);
+            Log.i(TAG, "Onset: " + alert.onset);
+            Log.i(TAG, "Expires: " + alert.expires);
+            Log.i(TAG, "Sender Name: " + alert.senderName);
+            Log.i(TAG, "Headline: " + alert.headline);
+            Log.i(TAG, "Description: " + alert.description);
+            Log.i(TAG, "Instruction: " + alert.instruction);
+            Log.i(TAG, "Language: " + alert.language);
+            Log.i(TAG, "Polygon: " + alert.polygon);
+        }
+        Log.i(TAG, "===== Fin de Alertas =====");
+    }
 
 }
