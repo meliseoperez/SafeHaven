@@ -44,7 +44,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
     private Marker myLocationMarker;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private final List<Marker> zoneMarkers = new ArrayList<>();
-    List<String> polygonList;
+
 
 
 
@@ -143,23 +143,25 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
 
         for (Zona zona : zonas) {
             zona.dibujarZona(mMap);
-            LatLng zoneCenter = zona.getCentro();
-            Marker marker = mMap.addMarker(new MarkerOptions().position(zoneCenter).title("Zona"));
-            zoneMarkers.add(marker);
-            System.out.printf(zona.toString());
+
         }
     }
-    public List<String> cargarZonas(AlertRepository repository){
+    public List<AlertInfo> cargarZonas(AlertRepository repository){
 
         repository.open();
         List<AlertInfo> alerts= repository.getAllAlerts();
         repository.close();
 
-        polygonList=new ArrayList<>();
-        for(AlertInfo alert: alerts){
 
-            polygonList.add(alert.polygon);
+        for(AlertInfo alert: alerts){
+            //Procesar y almacenar color
+            String color= Zona.extractColorFromHeadline(alert.getHeadline());
+            alert.setColor(color);
+            //Procesar y almacenar coordenadas
+            List<LatLng> coordenadasProcesadas=Zona.parsearCoordenadas(alert.getPolygon());
+            alert.setCoordenadas(coordenadasProcesadas);
+
         }
-        return  polygonList;
+        return  alerts;
     }
 }
