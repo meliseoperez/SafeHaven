@@ -69,7 +69,8 @@ public class DownloadAndStoreXMLAlerts {
                         // Aquí deberías procesar el contenido XML si es necesario
                         // y luego guardar los datos en el almacenamiento interno.
 
-                        String processedContent = processXMLContent(xmlData); // Si existe esta función
+                        //String processedContent = processXMLContent(xmlData); // Si existe esta función
+                        String processedContent=xmlData;
                         saveToFile(processedContent, "alertas.xml", context);
                     }
                 }
@@ -80,12 +81,6 @@ public class DownloadAndStoreXMLAlerts {
             myCallback.onCompleted();
         }).start();
     }
-
-    private String processXMLContent(String xmlContent) {
-        // Implementa tu lógica de procesamiento de XML aquí si es necesario
-        return xmlContent; // Retorna el contenido procesado
-    }
-
     private void saveToFile(String content, String fileName, Context context) {
         File file = new File(context.getFilesDir(), fileName);
 

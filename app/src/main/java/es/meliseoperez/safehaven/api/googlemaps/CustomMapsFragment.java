@@ -6,12 +6,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -25,9 +27,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import es.meliseoperez.safehaven.R;
@@ -44,7 +48,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
     private Marker myLocationMarker;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private final List<Marker> zoneMarkers = new ArrayList<>();
-
+    private HashMap<Polygon,Zona> zonaPoligonoMap=new HashMap<>();
 
 
 
@@ -102,7 +106,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                         } else {
                             myLocationMarker.setPosition(currentLocation);
                         }
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
                     }
                 }
             });
@@ -114,8 +118,6 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                 locationRequest.setFastestInterval(5000);
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             }
-
-
         }
     }
 
@@ -135,23 +137,33 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
 
     public void addZonesToMap(List<Zona> zonas) {
         if (mMap == null) return;
+        //Me aseguro de que esto se ejecuta en un hilo principal
+        getActivity().runOnUiThread(new Runnable() {
 
-        for (Marker marker : zoneMarkers) {
-            marker.remove();
-        }
-        zoneMarkers.clear();
+                @Override
+                public void run() {
+                    for (Marker marker : zoneMarkers) {
+                        marker.remove();
+                    }
+                    zoneMarkers.clear();
 
-        for (Zona zona : zonas) {
-            zona.dibujarZona(mMap);
+                    for (Marker marker : zoneMarkers) {
+                        marker.remove();
+                    }
+                    zoneMarkers.clear();
 
-        }
+                    for (Zona zona : zonas) {
+                        zona.dibujarZona(mMap,getContext());
+                    }
+
+            }
+        });
     }
-    public List<AlertInfo> cargarZonas(AlertRepository repository){
 
+    public List<AlertInfo> cargarZonas(AlertRepository repository){
         repository.open();
         List<AlertInfo> alerts= repository.getAllAlerts();
         repository.close();
-
 
         for(AlertInfo alert: alerts){
             //Procesar y almacenar color

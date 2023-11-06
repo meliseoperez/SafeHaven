@@ -4,7 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+import es.meliseoperez.safehaven.database.AlertRepository;
+
 public class AlertInfo {
+    private int id;
     public String effective;
     public String onset;
     public String expires;
@@ -16,6 +19,14 @@ public class AlertInfo {
     public String polygon;
     public String color;
     private List<LatLng> coordenadas;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public List<LatLng> getCoordenadas() {
         return coordenadas;

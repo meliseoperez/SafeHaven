@@ -7,8 +7,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.StringJoiner;
 
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 
@@ -62,13 +66,14 @@ public class AlertRepository {
         cursor.close();
         return alerts;
     }
-    private String extractColumnValue(Cursor cursor, String columnName) {
+
+    public String extractColumnValue(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         if (columnIndex != -1) {
             return cursor.getString(columnIndex);
         } else {
             // Puedes decidir manejarlo como quieras: lanzar una excepción, loguear un error, etc.
-            Log.e(TAG, "Column not found: " + columnName);
+            Log.e(TAG, "Columna no encontrada: " + columnName);
             return null;  // o cualquier valor predeterminado que quieras establecer
         }
     }
@@ -86,5 +91,6 @@ public class AlertRepository {
 
         return alert;
     }
+    //Método para recuperar las descripiciones e instrucciones de todas las alertas
 
 }
