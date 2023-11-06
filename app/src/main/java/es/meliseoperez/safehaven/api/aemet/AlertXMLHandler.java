@@ -3,6 +3,7 @@ package es.meliseoperez.safehaven.api.aemet;
 import android.content.Context;
 import android.util.Log;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 public class AlertXMLHandler {
@@ -29,6 +30,8 @@ public class AlertXMLHandler {
             Log.e(TAG, "Archivo no existe!");
             return;
         }
+
+        ensureCorrectEncoding();
 
         Log.i(TAG, "Procesando archivo XML...");
 
@@ -60,7 +63,7 @@ public class AlertXMLHandler {
 
             // Sobrescribir el archivo con el contenido modificado
             writeFile(file, xmlContent);
-            writeAndDisplayPath(xmlContent);
+            //writeAndDisplayPath(xmlContent);
 
 
         } catch (IOException e) {
@@ -69,53 +72,70 @@ public class AlertXMLHandler {
         myCallBack.onCompleted();
         Log.i(TAG, "*************Archivo XML procesado correctamente.");
     }
-
+    // Método helper para corregir problemas de codificación en la cadena de texto XML
+    private String correctEncodingIssues(String xmlContent) {
+        // Aquí reemplazamos los caracteres incorrectos por los correctos
+        xmlContent = xmlContent.replace("Ã©", "é");
+        xmlContent = xmlContent.replace("Ã³", "ó");
+        xmlContent = xmlContent.replace("Ãº", "ú");
+        xmlContent = xmlContent.replace("Ã¡", "á");
+        xmlContent = xmlContent.replace("Ã¯", "í");
+        xmlContent = xmlContent.replace("Ãº", "ú");
+        xmlContent = xmlContent.replace("Ã±", "ñ");
+        // Añadir más reemplazos si es necesario
+        return xmlContent;
+    }
     // Método helper para leer un archivo y convertirlo en String
     private String readFileToString(File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
         }
-        return stringBuilder.toString();
+        return correctEncodingIssues(stringBuilder.toString());
     }
 
     // Método helper para escribir contenido en un archivo
     private void writeFile(File file, String content) throws IOException {
-        try (FileOutputStream outputStream = new FileOutputStream(file, false)) { // false indica que queremos sobrescribir el archivo existente
-            outputStream.write(content.getBytes());
-            outputStream.flush();
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),StandardCharsets.UTF_8))){ // false indica que queremos sobrescribir el archivo existente
+            writer.write(content);
+            writer.flush();
 
         }
     }
-
-    public void writeAndDisplayPath(String content) throws IOException {
-        // Especificar el nombre del nuevo archivo
-        String newFileName = "alertas_procesadas.xml";
-
-        // Crear un archivo en la memoria interna del dispositivo.
-        // Estamos utilizando el método getFilesDir() que proporciona el directorio interno de la aplicación
+    public void ensureCorrectEncoding() {
         File directory = context.getFilesDir();
+        File file = new File(directory, FILE_NAME);
 
-        // Crear un nuevo objeto File que representa el archivo que se va a crear/guardar
-        File newFile = new File(directory, newFileName);
-        // Verificar si el archivo ya existe y, en caso afirmativo, eliminarlo.
-        if (newFile.exists()) {
-            newFile.delete();
+        if (!file.exists()) {
+            Log.e(TAG, "Archivo no existe!");
+            return;
         }
 
-        // Usar try-with-resources para el FileOutputStream para asegurar que se cierra correctamente
-        try (FileOutputStream outputStream = new FileOutputStream(newFile, false)) { // false para sobrescribir
-            // Convertir el contenido a bytes y escribirlos en el archivo
-            outputStream.write(content.getBytes());
-            outputStream.flush();
-        }
+        Log.i(TAG, "Asegurando la codificación correcta del archivo XML...");
 
-        // Mostrar la ruta del archivo. El método getCanonicalPath() arroja una IOException, así que
-        // está incluido en la declaración de 'throws' del método
-        Log.i(TAG, "*************El archivo se ha guardado en: " + newFile.getCanonicalPath());
+        try {
+            // Leer el contenido del archivo original
+            String originalContent = readFileToString(file);
+
+            // Verificar si la declaración de la codificación es correcta
+            String xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            if (!originalContent.startsWith(xmlDeclaration)) {
+                // Si no es correcta, reemplazarla o agregarla
+                String correctedContent = xmlDeclaration + "\n" + originalContent.replaceAll("(?i)<\\?xml.+\\?>", "").trim();
+
+                // Sobrescribir el archivo con la nueva codificación
+                writeFile(file, correctedContent);
+            }
+
+            Log.i(TAG, "Codificación asegurada correctamente.");
+        } catch (IOException e) {
+            Log.e(TAG, "Error al asegurar la codificación del archivo XML.", e);
+        }
     }
 
 }

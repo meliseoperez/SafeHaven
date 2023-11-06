@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processAlertsAndDisplayOnMap() {
-        AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this);
+        AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this,"alertas.xml");
         listaAlertas = alertsExtractor.extractAlertsInfo();
         insertAlertsIntoDatabase(listaAlertas);
         loadZonesOnMap();
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         List<Zona> zonas=new ArrayList<>();
         int contador=1;
         for(AlertInfo alerta: alertas){
-            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor());
+            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
             zonas.add(zona);
             contador++;
         }

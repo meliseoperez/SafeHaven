@@ -12,15 +12,19 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import okhttp3.internal.cache.FaultHidingSink;
+
 public class AlertsExtractor {
 
     // Constante utilizada para logs.
     private static final String TAG = "AlertsExtractor";
     private final Context context;
+    private final String fileXML;
 
     // Constructor que toma el contexto de la actividad o aplicación.
-    public AlertsExtractor(Context context) {
+    public AlertsExtractor(Context context,String fileXML) {
         this.context = context;
+        this.fileXML=fileXML;
     }
 
     // Método principal para extraer información de alertas.
@@ -30,7 +34,7 @@ public class AlertsExtractor {
 
         try {
             // Ubicación del archivo XML en el almacenamiento interno.
-            File xmlFile = new File(context.getFilesDir(), "alertas_procesadas.xml");
+            File xmlFile = new File(context.getFilesDir(), fileXML);
 
             // Configurando la fábrica para el analizador de documentos.
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

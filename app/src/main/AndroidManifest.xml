@@ -20,9 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SafeHaven"
         tools:targetApi="33">
-        <activity
-            android:name=".pruebabbdd.DisplayDatabaseActivity"
-            android:exported="false" />
+
         <activity
             android:name="es.meliseoperez.MainActivity"
             android:exported="true">
