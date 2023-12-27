@@ -2,8 +2,6 @@ package es.meliseoperez.safehaven.database;
 
 import android.provider.BaseColumns;
 
-import es.meliseoperez.safehaven.api.aemet.AlertXMLHandler;
-
 public class AlertContract {
     private AlertContract(){
 
