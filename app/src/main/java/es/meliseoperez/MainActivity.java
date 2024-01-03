@@ -1,10 +1,12 @@
 package es.meliseoperez;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -21,14 +23,20 @@ import java.util.concurrent.ExecutorService;
 
 import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
+import es.meliseoperez.safehaven.api.aemet.ApiService;
+import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreXMLAlerts;
 import es.meliseoperez.safehaven.api.aemet.AlertXMLHandler;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
+import es.meliseoperez.safehaven.api.aemet.MiServicio;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
 import es.meliseoperez.safehaven.api.googlemaps.CustomMapsFragment;
 import es.meliseoperez.safehaven.api.googlemaps.Zona;
 
+import es.meliseoperez.safehaven.database.AlertContract;
+import es.meliseoperez.safehaven.database.AlertDBHelper;
 import es.meliseoperez.safehaven.database.AlertRepository;
+import kotlin.reflect.KCallable;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -38,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
     private AlertRepository alertRepository;
     private List<AlertInfo> listaAlertas;
 
+
     private static final int LOCATION_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Establezco el contenido de la vista desde el layout del recurso XML.
         setContentView(R.layout.activity_main);
 
@@ -56,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
         // Inicio la recuperación de datos desde la API.
         fetchDataFromApi();
+
+
     }
 
     private void setupUI(){
@@ -64,23 +76,20 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container,customMapsFragment);
         fragmentTransaction.commit();
     }
-
     private void requestLocationPermission() {
         // Verifico si los permisos ya están otorgados; de lo contrario, solicito explícitamente.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
     }
-
-    private void insertAlertsIntoDatabase(List<AlertInfo> listaAlertas) {
+    private void insertAlertsIntoDatabase(@NonNull List<AlertInfo> listaAlertas, String nameTable) {
         // Establezco conexión con la base de datos y preparo para la inserción de datos.
         alertRepository = new AlertRepository(MainActivity.this);
         try {
             alertRepository.open();
-
             // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
             for (AlertInfo alerta : listaAlertas) {
-                long id = alertRepository.insertAlert(alerta);
+                long id = alertRepository.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
                 if (id == -1) {
                     Log.e(TAG, "Error al insertar alerta: " + alerta);
                 }
@@ -102,9 +111,15 @@ public class MainActivity extends AppCompatActivity {
         };
         executorService.execute(fectchDataRunnable);
     }
-
     private void processApiData() {
         DownloadAndStoreXMLAlerts dataDownloader=new DownloadAndStoreXMLAlerts();
+        DownloadAndStoreJSONAlerts downloadAndStoreJSONAlerts= new DownloadAndStoreJSONAlerts();
+        downloadAndStoreJSONAlerts.downloadData(new MyCallBack() {
+            @Override
+            public void onCompleted() {
+                handleDownloadCompletion();
+            }
+        },MainActivity.this);
         dataDownloader.downloadData(new MyCallBack() {
             @Override
             public void onCompleted() {
@@ -121,19 +136,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void processAlertsAndDisplayOnMap() {
         AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this,"alertas.xml");
         listaAlertas = alertsExtractor.extractAlertsInfo();
-        insertAlertsIntoDatabase(listaAlertas);
+        insertAlertsIntoDatabase(listaAlertas,AlertContract.AlertEntry.TABLE_NAME);
+        Intent intent = new Intent(this, MiServicio.class);
+        startService(intent);
         loadZonesOnMap();
     }
-
     private void loadZonesOnMap() {
         List<AlertInfo> alertas= customMapsFragment.cargarZonas(alertRepository);
-
-
-
         //polygonList=customMapsFragment.cargarZonas(alertRepository);
         List<Zona> zonas=new ArrayList<>();
         int contador=1;
@@ -144,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         }
         customMapsFragment.addZonesToMap(zonas);
     }
-
     private void checkAndDeleteDatabase() {
         String dbName = "Alerts.db";
         File dbFile = getDatabasePath(dbName);
@@ -157,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

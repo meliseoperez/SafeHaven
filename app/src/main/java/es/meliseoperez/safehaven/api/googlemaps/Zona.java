@@ -95,7 +95,6 @@ public class Zona {
         // Convierte el nombre del color en un valor de color.
         int fillColor = getColorFromString(this.nivelAlarma);
 
-
         // Crea las opciones de polígono con las coordenadas y configura estilos.
         PolygonOptions polygonOptions = new PolygonOptions()
                 .addAll(coordenadas)

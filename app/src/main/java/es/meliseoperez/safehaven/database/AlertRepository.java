@@ -30,13 +30,14 @@ public class AlertRepository {
     // Abre la base de datos para escritura
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
+
     }
     // Cierra la conexión a la base de datos
     public void close() {
         dbHelper.close();
     }
     // Inserta una nueva alerta en la base de datos
-    public long insertAlert(AlertInfo alert) {
+    public long insertAlert(AlertInfo alert, String tableName) {
         ContentValues values = new ContentValues();
         values.put(AlertContract.AlertEntry.COLUMN_EFFECTIVE, alert.effective);
         values.put(AlertContract.AlertEntry.COLUMN_ONSET, alert.onset);
@@ -49,13 +50,24 @@ public class AlertRepository {
         values.put(AlertContract.AlertEntry.COLUMN_POLYGON, alert.polygon);
 
         // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
-        return database.insert(AlertContract.AlertEntry.TABLE_NAME, null, values);
+        return database.insert(tableName, null, values);
+    }
+    public long insertAlertSecond(AlertInfo alert, String tableName) {
+        ContentValues values = new ContentValues();
+        values.put(AlertContract.AlertEntry.COLUMN_POLYGON, alert.polygon);
+        values.put(AlertContract.AlertEntry.COLUMN_INSTRUCTION, alert.instruction);
+        values.put(AlertContract.AlertEntry.COLUMN_DESCRIPTION, alert.description);
+        values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, alert.expires);
+        values.put(AlertContract.AlertEntry.COLUMN_HEADLINE, alert.headline);
+
+        // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
+        return database.insert(tableName, null, values);
     }
     // Recupera todas las alertas de la base de datos
     public List<AlertInfo> getAllAlerts() {
         List<AlertInfo> alerts = new ArrayList<>();
         // Consulta todos los registros
-        Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = database.query(SecondTableContract.SecondTableEntry.TABLE_NAME, null, null, null, null, null, null);
         // Itera sobre los resultados y convierte cada registro a un objeto AlertInfo
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -91,6 +103,7 @@ public class AlertRepository {
 
         return alert;
     }
+
     //Método para recuperar las descripiciones e instrucciones de todas las alertas
 
 }
