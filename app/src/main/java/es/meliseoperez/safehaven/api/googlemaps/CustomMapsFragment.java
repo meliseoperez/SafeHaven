@@ -155,7 +155,6 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                     for (Zona zona : zonas) {
                         zona.dibujarZona(mMap,getContext());
                     }
-
             }
         });
     }
