@@ -2,17 +2,19 @@ package es.meliseoperez.safehaven.api.aemet;
 
 import android.content.Context;
 import android.util.Log;
-import org.w3c.dom.Document;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import okhttp3.internal.cache.FaultHidingSink;
 
 public class AlertsExtractor {
 
@@ -26,9 +28,48 @@ public class AlertsExtractor {
         this.context = context;
         this.fileXML=fileXML;
     }
-
-    // Método principal para extraer información de alertas.
     public List<AlertInfo> extractAlertsInfo() {
+        List<AlertInfo> alerts = new ArrayList<>();
+        try {
+            // Ubicación del archivo JSON en el almacenamiento interno.
+            File jsonFile = new File(context.getFilesDir(), "alertas2.json");
+
+            // Leer el contenido del archivo en una cadena.
+            String content = new String(Files.readAllBytes(Paths.get(jsonFile.getPath())), StandardCharsets.UTF_8);
+
+            // Parsear la cadena en un JSONArray.
+            JSONArray jsonArray = new JSONArray(content);
+
+            // Iterar a través de cada objeto JSON en el array.
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                // Crear un nuevo objeto AlertInfo y asignarle valores.
+                AlertInfo currentAlert = new AlertInfo();
+                currentAlert.setId((int) jsonObject.getLong("id"));
+                currentAlert.setEffective(jsonObject.getString("effective"));
+                currentAlert.setOnset(jsonObject.getString("onset"));
+                currentAlert.setExpires(jsonObject.getString("expires"));
+                currentAlert.setSenderName(jsonObject.getString("sender_name"));
+                currentAlert.setHeadline(jsonObject.getString("headline"));
+                currentAlert.setDescription(jsonObject.getString("description"));
+                currentAlert.setInstruction(jsonObject.getString("instruction"));
+                currentAlert.setLanguage(jsonObject.getString("language"));
+                currentAlert.setPolygon(jsonObject.getString("polygon"));
+
+                // Añadir el objeto AlertInfo a la lista.
+                alerts.add(currentAlert);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error al extraer información de las alertas", e);
+        }
+
+        // Mostrar las alertas extraídas en el log.
+        displayAlerts(alerts);
+        return alerts;
+    }
+    // Método principal para extraer información de alertas.
+    /*public List<AlertInfo> extractAlertsInfo() {
         // Lista para almacenar las alertas extraídas.
         List<AlertInfo> alerts = new ArrayList<>();
 
@@ -81,7 +122,7 @@ public class AlertsExtractor {
         // Muestra las alertas extraídas en el log.
         displayAlerts(alerts);
         return alerts;
-    }
+    }*/
 
     // Método auxiliar para obtener el valor de un tag específico de un elemento.
     private String getTagValue(String tag, Element element) {

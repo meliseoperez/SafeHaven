@@ -67,7 +67,7 @@ public class AlertRepository {
     public List<AlertInfo> getAllAlerts() {
         List<AlertInfo> alerts = new ArrayList<>();
         // Consulta todos los registros
-        Cursor cursor = database.query(SecondTableContract.SecondTableEntry.TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, null, null, null, null, null);
         // Itera sobre los resultados y convierte cada registro a un objeto AlertInfo
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
