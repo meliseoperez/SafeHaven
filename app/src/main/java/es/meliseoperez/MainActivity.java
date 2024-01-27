@@ -23,20 +23,14 @@ import java.util.concurrent.ExecutorService;
 
 import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
-import es.meliseoperez.safehaven.api.aemet.ApiService;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
-import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreXMLAlerts;
-import es.meliseoperez.safehaven.api.aemet.AlertXMLHandler;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
-import es.meliseoperez.safehaven.api.aemet.MiServicio;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
 import es.meliseoperez.safehaven.api.googlemaps.CustomMapsFragment;
 import es.meliseoperez.safehaven.api.googlemaps.Zona;
 
 import es.meliseoperez.safehaven.database.AlertContract;
-import es.meliseoperez.safehaven.database.AlertDBHelper;
 import es.meliseoperez.safehaven.database.AlertRepository;
-import kotlin.reflect.KCallable;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -112,36 +106,21 @@ public class MainActivity extends AppCompatActivity {
         executorService.execute(fectchDataRunnable);
     }
     private void processApiData() {
-        DownloadAndStoreXMLAlerts dataDownloader=new DownloadAndStoreXMLAlerts();
+       // DownloadAndStoreXMLAlerts dataDownloader=new DownloadAndStoreXMLAlerts();
         DownloadAndStoreJSONAlerts downloadAndStoreJSONAlerts= new DownloadAndStoreJSONAlerts();
         downloadAndStoreJSONAlerts.downloadData(new MyCallBack() {
             @Override
             public void onCompleted() {
-                handleDownloadCompletion();
-            }
-        },MainActivity.this);
-        dataDownloader.downloadData(new MyCallBack() {
-            @Override
-            public void onCompleted() {
-                handleDownloadCompletion();
-            }
-        },MainActivity.this);
-    }
-    private void handleDownloadCompletion(){
-        AlertXMLHandler alertXMLHandler=new AlertXMLHandler(MainActivity.this);
-        alertXMLHandler.processAndSaveXML(new MyCallBack() {
-            @Override
-            public void onCompleted() {
                 processAlertsAndDisplayOnMap();
             }
-        });
+        },MainActivity.this);
+
     }
+
     private void processAlertsAndDisplayOnMap() {
         AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this,"alertas.xml");
         listaAlertas = alertsExtractor.extractAlertsInfo();
         insertAlertsIntoDatabase(listaAlertas,AlertContract.AlertEntry.TABLE_NAME);
-        Intent intent = new Intent(this, MiServicio.class);
-        startService(intent);
         loadZonesOnMap();
     }
     private void loadZonesOnMap() {

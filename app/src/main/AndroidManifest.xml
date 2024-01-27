@@ -17,10 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SafeHaven"
-        tools:targetApi="33"
         android:usesCleartextTraffic="true"
-        >
-        <service android:name="es.meliseoperez.safehaven.api.aemet.MiServicio" />
+        tools:targetApi="33">
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
+        <service android:name=".api.aemet.MiServicio" />
 
         <activity
             android:name="es.meliseoperez.MainActivity"
@@ -35,7 +38,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXnes5Bg7IVpgTQw_WHEh8BFU1axruwZM" />
-
     </application>
 
 </manifest>
