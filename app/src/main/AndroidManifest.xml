@@ -23,7 +23,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
 
-        <service android:name=".api.aemet.MiServicio" />
+        <!--<service android:name=".api.aemet.MiServicio" />-->
 
         <activity
             android:name="es.meliseoperez.MainActivity"
