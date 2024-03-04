@@ -7,8 +7,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.StringJoiner;
 
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 
@@ -17,25 +21,23 @@ public class AlertRepository {
     private static final String TAG = "Alert respository";
     // Base de datos y ayudante de SQLite
     private SQLiteDatabase database;
-    private AlertDBHelper dbHelper;
+    private final AlertDBHelper dbHelper;
 
     public AlertRepository(Context context) {
 
         dbHelper = new AlertDBHelper(context);
     }
-
     // Abre la base de datos para escritura
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
-    }
 
+    }
     // Cierra la conexión a la base de datos
     public void close() {
         dbHelper.close();
     }
-
     // Inserta una nueva alerta en la base de datos
-    public long insertAlert(AlertInfo alert) {
+    public long insertAlert(AlertInfo alert, String tableName) {
         ContentValues values = new ContentValues();
         values.put(AlertContract.AlertEntry.COLUMN_EFFECTIVE, alert.effective);
         values.put(AlertContract.AlertEntry.COLUMN_ONSET, alert.onset);
@@ -48,16 +50,24 @@ public class AlertRepository {
         values.put(AlertContract.AlertEntry.COLUMN_POLYGON, alert.polygon);
 
         // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
-        return database.insert(AlertContract.AlertEntry.TABLE_NAME, null, values);
+        return database.insert(tableName, null, values);
     }
+    public long insertAlertSecond(AlertInfo alert, String tableName) {
+        ContentValues values = new ContentValues();
+        values.put(AlertContract.AlertEntry.COLUMN_POLYGON, alert.polygon);
+        values.put(AlertContract.AlertEntry.COLUMN_INSTRUCTION, alert.instruction);
+        values.put(AlertContract.AlertEntry.COLUMN_DESCRIPTION, alert.description);
+        values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, alert.expires);
+        values.put(AlertContract.AlertEntry.COLUMN_HEADLINE, alert.headline);
 
+        // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
+        return database.insert(tableName, null, values);
+    }
     // Recupera todas las alertas de la base de datos
     public List<AlertInfo> getAllAlerts() {
         List<AlertInfo> alerts = new ArrayList<>();
-
         // Consulta todos los registros
         Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, null, null, null, null, null);
-
         // Itera sobre los resultados y convierte cada registro a un objeto AlertInfo
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -68,13 +78,14 @@ public class AlertRepository {
         cursor.close();
         return alerts;
     }
-    private String extractColumnValue(Cursor cursor, String columnName) {
+
+    public String extractColumnValue(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         if (columnIndex != -1) {
             return cursor.getString(columnIndex);
         } else {
             // Puedes decidir manejarlo como quieras: lanzar una excepción, loguear un error, etc.
-            Log.e(TAG, "Column not found: " + columnName);
+            Log.e(TAG, "Columna no encontrada: " + columnName);
             return null;  // o cualquier valor predeterminado que quieras establecer
         }
     }
@@ -93,5 +104,6 @@ public class AlertRepository {
         return alert;
     }
 
-    // Aquí puedes agregar más métodos CRUD (como update, delete) si los necesitas
+    //Método para recuperar las descripiciones e instrucciones de todas las alertas
+
 }

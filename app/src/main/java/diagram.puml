@@ -1,0 +1,29 @@
+@startuml
+
+abstract class Person {
+    #Id: string
+    #name: string
+    #age: int
+}
+
+class Employee {
+    +Department: Department
+    +Salary: Decimal
+}
+
+class Professor {
+    +Expertise: String
+}
+
+class Student {
+    +Grade: int
+    +GradeLetter: Char
+    +GraduationYear: Year
+    +void UpdateGrade()
+}
+
+Person <|-- Employee
+Employee <|-- Professor
+Person <|-- Student
+
+@enduml

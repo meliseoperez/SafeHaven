@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Campo de texto para el correo electrónico -->
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress" />
+
+    <!-- Campo de texto para la contraseña -->
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:autofillHints="emailAddress" />
+
+    <!-- Botón para iniciar sesión -->
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"/>
+
+    <!-- Botón para iniciar sesión con Google (opcional) -->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
