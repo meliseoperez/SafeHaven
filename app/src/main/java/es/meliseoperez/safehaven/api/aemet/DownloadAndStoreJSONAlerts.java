@@ -44,8 +44,8 @@ public class DownloadAndStoreJSONAlerts {
                     }
 
                     String responseData = responseBody.string();
-                    //JSONObject json = new JSONObject(responseData);
-                    JSONArray jsonArray = new JSONArray(responseData);
+                    JSONObject json = new JSONObject(responseData);
+                    //JSONArray jsonArray = new JSONArray(responseData);
                     // Aquí deberías procesar el contenido JSON si es necesario
                     // y luego guardar los datos en el almacenamiento interno.
 
