@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 
 import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
+import es.meliseoperez.safehaven.api.aemet.AlertsExtractor2;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
@@ -118,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processAlertsAndDisplayOnMap() {
-        AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this,"alertas.xml");
+        AlertsExtractor alertsExtractor=new AlertsExtractor(MainActivity.this,"alertas2.json");
         listaAlertas = alertsExtractor.extractAlertsInfo();
+        Log.e(TAG, "numero de alertas: " + listaAlertas.size());
+
         insertAlertsIntoDatabase(listaAlertas,AlertContract.AlertEntry.TABLE_NAME);
         loadZonesOnMap();
     }
