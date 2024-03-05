@@ -20,12 +20,28 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
+            android:name=".login.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                 
+                 <action android:name="android.intent.action.MAIN"/>
+                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="es.meliseoperez.MainActivity"
+            android:exported="true">
+            <!-- No necesitas un intent-filter con MAIN y LAUNCHER a menos que esta sea la entrada principal de tu aplicación -->
+        </activity>
+        <activity
+            android:name=".login.RegisterActivity"
+            android:exported="true">
+            <!-- No necesitas un intent-filter a menos que esta actividad sea un punto de entrada a tu aplicación -->
+        </activity>
 
         <!--<service android:name=".api.aemet.MiServicio" />-->
 
-        <activity
+        <!-- <activity
             android:name="es.meliseoperez.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -33,7 +49,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
