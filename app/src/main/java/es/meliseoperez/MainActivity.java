@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.File;
@@ -155,4 +157,32 @@ public class MainActivity extends AppCompatActivity {
         // Antes de destruir la actividad, cierro los servicios para evitar fugas de memoria.
         executorService.shutdown();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_usuario:
+                // Abrir actividad o fragmento relacionado con Usuario
+                return true;
+            case R.id.menu_comentarios:
+                // Abrir actividad o fragmento relacionado con Comentarios
+                return true;
+            case R.id.menu_salir:
+                // Manejar la acción de salir
+                finish(); // Por ejemplo, para cerrar la actividad
+                return true;
+            case R.id.menu_acerca_de:
+                // Mostrar un dialogo o actividad sobre "Acerca de"
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
