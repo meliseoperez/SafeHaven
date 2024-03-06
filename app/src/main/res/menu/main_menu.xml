@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_usuario"
+        android:icon="@drawable/baseline_account_circle_black_18"
+        android:title="Usuario"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/menu_comentarios"
+        android:icon="@drawable/baseline_comment_black_18"
+        android:title="Comentarios"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_salir"
+        android:icon="@drawable/baseline_disabled_by_default_black_18"
+        android:title="Salir"
+        app:showAsAction="ifRoom"/>/>
+    <item
+        android:id="@+id/menu_acerca_de"
+        android:icon="@drawable/baseline_help_black_18"
+        android:title="Acerca de"
+        app:showAsAction="ifRoom"/>
+</menu>
