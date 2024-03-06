@@ -19,14 +19,17 @@
         android:theme="@style/Theme.SafeHaven"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+        <!-- SplashScreenActivity configurada como la actividad de inicio -->
+        <activity android:name=".SplashScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                 
-                 <action android:name="android.intent.action.MAIN"/>
-                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
             android:name="es.meliseoperez.MainActivity"
@@ -36,24 +39,10 @@
         <activity
             android:name=".login.RegisterActivity"
             android:exported="true">
-            <!-- No necesitas un intent-filter a menos que esta actividad sea un punto de entrada a tu aplicación -->
         </activity>
-
-        <!--<service android:name=".api.aemet.MiServicio" />-->
-
-        <!-- <activity
-            android:name="es.meliseoperez.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> -->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXnes5Bg7IVpgTQw_WHEh8BFU1axruwZM" />
     </application>
-
 </manifest>
