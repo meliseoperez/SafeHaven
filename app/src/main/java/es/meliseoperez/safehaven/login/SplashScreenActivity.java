@@ -1,4 +1,4 @@
-package es.meliseoperez.safehaven;
+package es.meliseoperez.safehaven.login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.meliseoperez.MainActivity;
-import es.meliseoperez.safehaven.login.LoginActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
