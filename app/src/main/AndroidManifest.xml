@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <!-- SplashScreenActivity configurada como la actividad de inicio -->
-        <activity android:name=".SplashScreenActivity"
+        <activity android:name=".login.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
