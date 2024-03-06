@@ -25,7 +25,6 @@ import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
-import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
 import es.meliseoperez.safehaven.api.googlemaps.CustomMapsFragment;
 import es.meliseoperez.safehaven.api.googlemaps.Zona;
