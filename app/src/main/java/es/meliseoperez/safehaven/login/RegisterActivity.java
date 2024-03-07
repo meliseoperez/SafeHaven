@@ -3,20 +3,21 @@ package es.meliseoperez.safehaven.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import es.meliseoperez.safehaven.R;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -75,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                     //Finalizo la actividad actual
                     finish();
 
-                    },
+                },
                 error -> Log.d(TAG, "Registro fallido: " + error.getMessage())) {
             @Override
             protected Map<String, String> getParams() {

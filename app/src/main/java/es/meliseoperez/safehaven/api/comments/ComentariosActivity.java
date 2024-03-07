@@ -1,22 +1,26 @@
 package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.meliseoperez.MainActivity;
 import es.meliseoperez.safehaven.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -41,6 +45,8 @@ public class ComentariosActivity extends AppCompatActivity {
         comentariosAdapter = new ComentariosAdapter(new ArrayList<>());
         recyclerView.setAdapter(comentariosAdapter);
 
+        // Establecer un LayoutManager para el RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         cargarComentarios();
     }
 
@@ -49,8 +55,8 @@ public class ComentariosActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("http://1237.0.0.1:8000/api/v1/coments")
-                .addHeader("Authorization", "Bearer" + token)
+                .url("http://10.0.2.2:8000/api/v1/coments")
+                .addHeader("Authorization", "Bearer " + token)
                 .build();
         // Enviar la solicitud de forma asincrónica
         client.newCall(request).enqueue(new okhttp3.Callback(){
@@ -63,7 +69,9 @@ public class ComentariosActivity extends AppCompatActivity {
                         public void run() {
                             // Mostrar mensaje de que debe ser usuario premium
                             Toast.makeText(getApplicationContext(),"El usario no tiene acceso. Registrese como premiun si todavía no lo ha hecho.",Toast.LENGTH_LONG).show();
-
+                            Intent intent = new Intent(ComentariosActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 } else if (response.code() == 200) {
@@ -74,7 +82,10 @@ public class ComentariosActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Toast.makeText(getApplicationContext(),"" ,Toast.LENGTH_LONG).show();
+                            Log.d("MIERDA",responseData);
                             List<Comentario> comentarioList = parseComentarios(responseData);
+                            Log.d("MIERDA", String.valueOf(comentarioList.size()));
                             comentariosAdapter.setComentariosList(comentarioList);
                             comentariosAdapter.notifyDataSetChanged();
                         }
@@ -86,7 +97,16 @@ public class ComentariosActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 // Manejar el fallo, por ejemplo, mostrar un mensaje al usuario
-                Toast.makeText(getApplicationContext(),"ERROR EN SERVIDOR.",Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),"ERROR EN SERVIDOR.",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ComentariosActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                });
 
             }
         });
@@ -95,19 +115,13 @@ public class ComentariosActivity extends AppCompatActivity {
     //Método para parsear la respuesta JSON y convertirla en una lista de Comentarios
 
     private List<Comentario> parseComentarios(String responseData) {
-        List<Comentario> comentarioList = new ArrayList<>();
-        try {
-            JSONObject jsonResponse = new JSONObject(responseData);
-            JSONArray dataArray = jsonResponse.getJSONArray("data");
+        Gson gson = new Gson();
+        Type comentarioListType = new TypeToken<ComentariosResponse>() {}.getType();
+        ComentariosResponse comentariosResponse = gson.fromJson(responseData, comentarioListType);
 
-            for(int i=0; i < dataArray.length(); i++){
-                JSONObject comentarioJason = dataArray.getJSONObject(i);
-                Comentario comentario = new Comentario();
-                //Llenar el objeto comentario con los datos del JSON
-                comentarioList.add(comentario);
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        List<Comentario> comentarioList = new ArrayList<>();
+        if (comentariosResponse != null && comentariosResponse.getData() != null) {
+            comentarioList = comentariosResponse.getData();
         }
         return comentarioList;
     }
