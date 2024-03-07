@@ -40,6 +40,10 @@
             android:name=".login.RegisterActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".api.comments.ComentariosActivity"
+            android:exported="true">
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
