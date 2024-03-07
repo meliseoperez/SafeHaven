@@ -27,12 +27,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Es importante inicializar las variables fuera del método onResponse
-        // para poderlas usar dentro de la clase anónima
-        final EditText nameInput = findViewById(R.id.etName);
-        final EditText emailInput = findViewById(R.id.etEmail);
-        final EditText passwordInput = findViewById(R.id.etPassword);
-        final EditText typeUserInput = findViewById(R.id.ettype_user_input);
+
+        nameInput = findViewById(R.id.etName);
+        emailInput = findViewById(R.id.etEmail);
+        passwordInput = findViewById(R.id.etPassword);
+        //Comprueba identificación layout en remoto.
+        typeUserInput = findViewById(R.id.rgTypeUser);
+
 
         // Usar .trim() para eliminar espacios en blanco innecesarios
         String name = nameInput.getText().toString().trim();
@@ -43,8 +44,19 @@ public class RegisterActivity extends AppCompatActivity {
         // Crear un nuevo usuario con la información proporcionada
         User newUser = new User(name, email, password, typeUser);
 
-        // Enviar una solicitud de registro al servidor utilizando Volley
-        String url = "https://example.com/api/register";
+
+            sendRegistrationRequest(name, email, password, typeUser); // Método separado para enviar la solicitud
+        });
+        btnCancelar = findViewById(R.id.btnCancelar);
+        btnCancelar.setOnClickListener(view -> {
+            finish();
+        });
+    }
+
+
+
+    private void sendRegistrationRequest(String name, String email, String password, String typeUser) {
+        String url = "http://10.0.2.2:8000/api/register";
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response ->
                 { Log.d(TAG, "Registro exitoso: " + response);
