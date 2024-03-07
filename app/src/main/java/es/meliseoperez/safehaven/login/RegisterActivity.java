@@ -60,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void sendRegistrationRequest(String name, String email, String password, String typeUser) {
         String url = "http://10.0.2.2:8000/api/register";
         StringRequest request = new StringRequest(Request.Method.POST, url,
