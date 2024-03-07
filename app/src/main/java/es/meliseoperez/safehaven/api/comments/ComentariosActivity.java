@@ -27,6 +27,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ComentariosActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
     private SharedPreferences sharedPreferences;
     private ComentariosAdapter comentariosAdapter;
