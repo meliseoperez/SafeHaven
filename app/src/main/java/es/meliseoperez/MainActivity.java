@@ -28,6 +28,7 @@ import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
+import es.meliseoperez.safehaven.api.comments.ComentariosActivity;
 import es.meliseoperez.safehaven.api.googlemaps.CustomMapsFragment;
 import es.meliseoperez.safehaven.api.googlemaps.Zona;
 
@@ -171,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
                 // Abrir actividad o fragmento relacionado con Usuario
                 return true;
             case R.id.menu_comentarios:
-                // Abrir actividad o fragmento relacionado con Comentarios
+                Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_salir:
                 // Manejar la acción de salir
