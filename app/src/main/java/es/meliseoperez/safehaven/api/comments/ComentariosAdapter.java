@@ -2,7 +2,6 @@ package es.meliseoperez.safehaven.api.comments;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,7 +36,7 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
 
     @Override
     public int getItemCount() {
-        Log.d("MIERDA: ", String.valueOf(comentarioList.size()));
+        Log.d("MIERDA: ", "VALOR DE GETITEMCOUNT: " + String.valueOf(comentarioList.size()));
         return comentarioList.size();
     }
 
