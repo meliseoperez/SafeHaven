@@ -38,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
         nameInput = findViewById(R.id.etName);
         emailInput = findViewById(R.id.etEmail);
         passwordInput = findViewById(R.id.etPassword);
-        //Comprueba identificación layout en remoto.
         typeUserInput = findViewById(R.id.rgTypeUser);
 
         // Escucha el cambio en la selección de RadioGroup
