@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +29,6 @@ import okhttp3.Response;
 public class ComentariosActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SharedPreferences sharedPreferences;
-
     private ComentariosAdapter comentariosAdapter;
 
     @Override
@@ -82,10 +80,8 @@ public class ComentariosActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(),"" ,Toast.LENGTH_LONG).show();
-                            Log.d("MIERDA",responseData);
+                            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
                             List<Comentario> comentarioList = parseComentarios(responseData);
-                            Log.d("MIERDA", String.valueOf(comentarioList.size()));
                             comentariosAdapter.setComentariosList(comentarioList);
                             comentariosAdapter.notifyDataSetChanged();
                         }
@@ -99,7 +95,7 @@ public class ComentariosActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"ERROR EN SERVIDOR.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "ERROR EN SERVIDOR.", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(ComentariosActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

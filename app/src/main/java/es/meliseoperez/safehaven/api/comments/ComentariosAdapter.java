@@ -4,10 +4,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -31,7 +34,10 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         Comentario comentario = comentarioList.get(position);
         holder.commentTextView.setText(comentario.getCommentText());
-        // Configurar otros elementos de la vista como la imagen usando Glide o Picasso
+        // Cargar la imagen usando Glide
+        Glide.with(holder.itemView.getContext())
+                .load(comentario.getImageUrl()) // Asegúrate de que tu clase Comentario tenga un getter para imageUrl
+                .into(holder.commentImageView);
     }
 
     @Override
@@ -47,10 +53,12 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView commentTextView;
+        public ImageView commentImageView;
         //Declarar otros elementos de la vista
         public ViewHolder(View itemView){
             super(itemView);
             commentTextView = itemView.findViewById(R.id.commentTextView);
+            commentImageView = itemView.findViewById(R.id.commentImageView);
             //Inicializar otros elementos de la vista
         }
     }
