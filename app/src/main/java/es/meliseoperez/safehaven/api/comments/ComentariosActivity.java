@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,22 @@ public class ComentariosActivity extends AppCompatActivity {
         // Establecer un LayoutManager para el RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         cargarComentarios();
+        // Activar el botón de retroceso en la barra de acciones
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Finaliza la actividad actual y vuelve a la anterior en la pila de actividades
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void cargarComentarios() {
         String token = sharedPreferences.getString("token","");
