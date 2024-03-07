@@ -93,7 +93,6 @@ public class ComentariosActivity extends AppCompatActivity {
 
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 // Manejar el fallo, por ejemplo, mostrar un mensaje al usuario
@@ -123,6 +122,7 @@ public class ComentariosActivity extends AppCompatActivity {
         if (comentariosResponse != null && comentariosResponse.getData() != null) {
             comentarioList = comentariosResponse.getData();
         }
+
         return comentarioList;
     }
 }
