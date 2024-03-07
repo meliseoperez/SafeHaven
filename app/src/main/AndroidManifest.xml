@@ -37,7 +37,12 @@
             <!-- No necesitas un intent-filter con MAIN y LAUNCHER a menos que esta sea la entrada principal de tu aplicación -->
         </activity>
         <activity
-            android:name=".login.RegisterActivity"
+            android:name="es.meliseoperez.safehaven.login.RegisterActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".api.comments.ComentariosActivity"
             android:exported="true">
         </activity>
         <activity

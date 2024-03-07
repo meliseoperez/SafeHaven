@@ -1,12 +1,16 @@
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -42,18 +46,22 @@ public class RegisterActivity extends AppCompatActivity {
         // Enviar una solicitud de registro al servidor utilizando Volley
         String url = "https://example.com/api/register";
         StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, "Registro exitoso: " + response);
-                        // Redirigir al usuario a la pantalla de inicio de sesión
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Registro fallido: " + error.getMessage());
-            }
-        }) {
+                response ->
+                { Log.d(TAG, "Registro exitoso: " + response);
+                    //Creo un Intent para iniciar LoginActivity
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+
+                    //Pasar el email y password como extras
+                    intent.putExtra("email", email);
+                    intent.putExtra("password", password);
+                    //Inicio LoginActivity
+                    startActivity(intent);
+                    //Finalizo la actividad actual
+                    finish();
+
+                },
+                error -> Log.d(TAG, "Registro fallido: " + error.getMessage())) {
+
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
