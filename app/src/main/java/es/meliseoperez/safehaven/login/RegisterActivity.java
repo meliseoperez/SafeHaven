@@ -1,8 +1,7 @@
-package es.meliseoperez.safehaven.login;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,18 +21,12 @@ import es.meliseoperez.safehaven.R;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-    private EditText nameInput;
-    private EditText emailInput;
-    private EditText passwordInput;
-    private RadioGroup typeUserInput;
-    private Button btnRegister;
-    private Button btnCancelar;
-    private String typeUser = ""; // Variable de instancia para almacenar el tipo de usuario seleccionado
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
 
         nameInput = findViewById(R.id.etName);
         emailInput = findViewById(R.id.etEmail);
@@ -41,17 +34,16 @@ public class RegisterActivity extends AppCompatActivity {
         //Comprueba identificación layout en remoto.
         typeUserInput = findViewById(R.id.rgTypeUser);
 
-        // Escucha el cambio en la selección de RadioGroup
-        typeUserInput.setOnCheckedChangeListener((group, checkedId) -> {
-            RadioButton selectedRadioButton = findViewById(checkedId);
-            typeUser = selectedRadioButton.getText().toString().trim();
-        });
 
-        btnRegister = findViewById(R.id.btnRegister);
-        btnRegister.setOnClickListener(view -> {
-            String name = nameInput.getText().toString().trim();
-            String email = emailInput.getText().toString().trim();
-            String password = passwordInput.getText().toString().trim();
+        // Usar .trim() para eliminar espacios en blanco innecesarios
+        String name = nameInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        String typeUser = typeUserInput.getText().toString().trim();
+
+        // Crear un nuevo usuario con la información proporcionada
+        User newUser = new User(name, email, password, typeUser);
+
 
             sendRegistrationRequest(name, email, password, typeUser); // Método separado para enviar la solicitud
         });
@@ -81,17 +73,21 @@ public class RegisterActivity extends AppCompatActivity {
 
                 },
                 error -> Log.d(TAG, "Registro fallido: " + error.getMessage())) {
+
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", name);
-                params.put("email", email);
-                params.put("password", password);
-                params.put("type_user", typeUser);
+                // Obtener los valores dentro del método getParams para asegurar
+                // que sean los últimos valores ingresados
+                params.put("name", nameInput.getText().toString().trim());
+                params.put("email", emailInput.getText().toString().trim());
+                params.put("password", passwordInput.getText().toString().trim());
+                params.put("type_user", typeUserInput.getText().toString().trim());
                 return params;
             }
         };
 
+        // Agregar la solicitud a la cola de solicitudes de Volley
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
