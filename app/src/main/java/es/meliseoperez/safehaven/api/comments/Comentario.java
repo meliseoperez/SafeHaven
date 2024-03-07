@@ -1,13 +1,32 @@
 package es.meliseoperez.safehaven.api.comments;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Comentario {
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("alert_id")
     private int alertId;
+
+    @SerializedName("user_id")
     private int userId;
+
+    @SerializedName("comment_text")
     private String commentText;
+
+    @SerializedName("image_url")
     private String imageUrl;
-    private String createdAt;
-    private String updatedAt;
+
+    // Omitido: createdAt, updatedAt y getters y setters para todos los campos
+
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
 
     public int getId() {
         return id;
@@ -33,14 +52,6 @@ public class Comentario {
         this.userId = userId;
     }
 
-    public String getCommentText() {
-        return commentText;
-    }
-
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
@@ -49,22 +60,6 @@ public class Comentario {
         this.imageUrl = imageUrl;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    // Constructor, getters y setters
 }
 
