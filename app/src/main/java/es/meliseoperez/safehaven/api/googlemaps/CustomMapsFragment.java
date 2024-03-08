@@ -1,25 +1,23 @@
 package es.meliseoperez.safehaven.api.googlemaps;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,7 +49,13 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<Polygon,Zona> zonaPoligonoMap=new HashMap<>();
 
 
-
+    public interface MapReadyCallback{
+        void onMapReady();
+    }
+    private MapReadyCallback mapReadyCallback;
+    public void setMapReadyCallback (MapReadyCallback callback){
+        this.mapReadyCallback = callback;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
         return inflater.inflate(R.layout.fragment_maps, container, false);
@@ -118,6 +122,9 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                 locationRequest.setFastestInterval(5000);
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             }
+        }
+        if (mapReadyCallback != null) {
+            mapReadyCallback.onMapReady();
         }
     }
 
