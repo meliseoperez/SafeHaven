@@ -65,11 +65,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    /**
+     * Configura la interfaz de usuario inicializando y estableciendo el fragmento del mapa.
+     * Este método prepara el {@link CustomMapsFragment} y lo agrega al contenedor de fragmentos
+     * en la actividad. También establece un callback para ser notificado cuando el mapa esté listo,
+     * lo que permite cargar las zonas en el mapa una vez que esté disponible.
+     */
+    private void setupUI() {
+        // Crea una nueva instancia del CustomMapsFragment.
+        customMapsFragment = new CustomMapsFragment();
 
-    private void setupUI(){
-        customMapsFragment=new CustomMapsFragment();
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container,customMapsFragment);
+        // Establece un callback para ser notificado cuando el mapa esté listo.
+        // Esto se hace a través de la interfaz OnMapReadyCallback que debe ser implementada por el CustomMapsFragment.
+        customMapsFragment.setMapReadyCallback(new CustomMapsFragment.MapReadyCallback() {
+            @Override
+            public void onMapReady() {
+                // Cuando el mapa esté listo, carga las zonas en él.
+                loadZonesOnMap();
+            }
+        });
+
+        // Inicia una transacción de fragmentos para agregar el CustomMapsFragment al contenedor.
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, customMapsFragment);
+
+        // Confirma la transacción de fragmentos.
         fragmentTransaction.commit();
     }
     private void requestLocationPermission() {
@@ -86,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
             for (AlertInfo alerta : listaAlertas) {
                 long id = alertRepository.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
+                Log.e(TAG, "Error al insertar alerta: " + alerta.getDescription());
                 if (id == -1) {
                     Log.e(TAG, "Error al insertar alerta: " + alerta);
                 }
@@ -125,17 +146,15 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "numero de alertas: " + listaAlertas.size());
 
         insertAlertsIntoDatabase(listaAlertas,AlertContract.AlertEntry.TABLE_NAME);
-        loadZonesOnMap();
+        //loadZonesOnMap();
     }
     private void loadZonesOnMap() {
         List<AlertInfo> alertas= customMapsFragment.cargarZonas(alertRepository);
         //polygonList=customMapsFragment.cargarZonas(alertRepository);
         List<Zona> zonas=new ArrayList<>();
-        int contador=1;
         for(AlertInfo alerta: alertas){
             Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
             zonas.add(zona);
-            contador++;
         }
         customMapsFragment.addZonesToMap(zonas);
     }
