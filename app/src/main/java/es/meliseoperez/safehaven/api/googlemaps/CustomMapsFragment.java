@@ -169,7 +169,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
     public List<AlertInfo> cargarZonas(AlertRepository repository){
         repository.open();
         List<AlertInfo> alerts= repository.getAllAlerts();
-        repository.close();
+        //repository.close();
 
         for(AlertInfo alert: alerts){
             //Procesar y almacenar color

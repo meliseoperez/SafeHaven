@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Inicializa alertRepository aquí
+        alertRepository = new AlertRepository(this);
         // Establezco el contenido de la vista desde el layout del recurso XML.
         setContentView(R.layout.activity_main);
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMapReady() {
                 // Cuando el mapa esté listo, carga las zonas en él.
-                loadZonesOnMap();
+                processAlertsAndDisplayOnMap();
             }
         });
 
@@ -98,25 +99,31 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
     }
-    private void insertAlertsIntoDatabase(@NonNull List<AlertInfo> listaAlertas, String nameTable) {
-        // Establezco conexión con la base de datos y preparo para la inserción de datos.
-        alertRepository = new AlertRepository(MainActivity.this);
-        try {
-            alertRepository.open();
-            // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
-            for (AlertInfo alerta : listaAlertas) {
-                long id = alertRepository.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
-                Log.e(TAG, "Error al insertar alerta: " + alerta.getDescription());
-                if (id == -1) {
-                    Log.e(TAG, "Error al insertar alerta: " + alerta);
-                }
-            }
-        } catch (SQLException e) {
-            Log.e(TAG, "Error en la base de datos", e);
-        } finally {
-            alertRepository.close(); // Siempre aseguro el cierre de la base de datos.
-        }
-    }
+
+   private void insertAlertsIntoDatabase(@NonNull List<AlertInfo> listaAlertas, String nameTable) {
+       long startTime = System.nanoTime(); // Inicio del tiempo de medición
+       try (AlertRepository alertRepo = new AlertRepository(this)) {
+           alertRepo.open(); // Asegúrate de que esto es seguro para llamar así.
+           // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
+           for (AlertInfo alerta : listaAlertas) {
+               long id = alertRepo.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
+               Log.e(TAG, "Alerta insertada : " + alerta.getDescription());
+               if (id == -1) {
+                   Log.e(TAG, "Error al insertar alerta: " + alerta);
+               }
+           }
+       } catch (SQLException e) {
+           Log.e(TAG, "Error en la base de datos", e);
+       }
+       // No es necesario un bloque finally para cerrar el AlertRepository, try-with-resources lo maneja.
+       long endTime = System.nanoTime(); // Fin del tiempo de medición
+       long duration = (endTime - startTime); // Duración en nanosegundos
+
+       // Convertir la duración a milisegundos para una mejor comprensión
+       double durationInMilliseconds = duration / 1_000_000.0;
+       Log.d(TAG, "La inserción de alertas tomó: " + durationInMilliseconds + " ms");
+   }
+
     private void fetchDataFromApi(){
         Runnable fectchDataRunnable=()->{
             try{
@@ -134,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         downloadAndStoreJSONAlerts.downloadData(new MyCallBack() {
             @Override
             public void onCompleted() {
-                processAlertsAndDisplayOnMap();
+               // processAlertsAndDisplayOnMap();
             }
         },MainActivity.this);
 
@@ -146,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "numero de alertas: " + listaAlertas.size());
 
         insertAlertsIntoDatabase(listaAlertas,AlertContract.AlertEntry.TABLE_NAME);
-        //loadZonesOnMap();
+        loadZonesOnMap();
     }
     private void loadZonesOnMap() {
         List<AlertInfo> alertas= customMapsFragment.cargarZonas(alertRepository);
