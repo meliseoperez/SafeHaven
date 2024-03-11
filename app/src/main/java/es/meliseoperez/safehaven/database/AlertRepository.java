@@ -7,16 +7,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SimpleTimeZone;
-import java.util.StringJoiner;
 
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 
-public class AlertRepository {
+public class AlertRepository implements AutoCloseable{
 
     private static final String TAG = "Alert respository";
     // Base de datos y ayudante de SQLite
@@ -33,9 +29,9 @@ public class AlertRepository {
 
     }
     // Cierra la conexión a la base de datos
-    public void close() {
+   /* public void close() {
         dbHelper.close();
-    }
+    }*/
     // Inserta una nueva alerta en la base de datos
     public long insertAlert(AlertInfo alert, String tableName) {
         ContentValues values = new ContentValues();
@@ -52,30 +48,25 @@ public class AlertRepository {
         // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
         return database.insert(tableName, null, values);
     }
-    public long insertAlertSecond(AlertInfo alert, String tableName) {
-        ContentValues values = new ContentValues();
-        values.put(AlertContract.AlertEntry.COLUMN_POLYGON, alert.polygon);
-        values.put(AlertContract.AlertEntry.COLUMN_INSTRUCTION, alert.instruction);
-        values.put(AlertContract.AlertEntry.COLUMN_DESCRIPTION, alert.description);
-        values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, alert.expires);
-        values.put(AlertContract.AlertEntry.COLUMN_HEADLINE, alert.headline);
-
-        // Inserta el registro y devuelve el ID del nuevo registro, o -1 si hay un error
-        return database.insert(tableName, null, values);
-    }
     // Recupera todas las alertas de la base de datos
     public List<AlertInfo> getAllAlerts() {
         List<AlertInfo> alerts = new ArrayList<>();
-        // Consulta todos los registros
-        Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, null, null, null, null, null);
-        // Itera sobre los resultados y convierte cada registro a un objeto AlertInfo
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            AlertInfo alert = cursorToAlert(cursor);
-            alerts.add(alert);
-            cursor.moveToNext();
+        Cursor cursor = null;
+        try{
+            // Consulta todos los registros
+            cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, null, null, null, null, null);
+            // Itera sobre los resultados y convierte cada registro a un objeto AlertInfo
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                AlertInfo alert = cursorToAlert(cursor);
+                alerts.add(alert);
+                cursor.moveToNext();
+            }
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        cursor.close();
         return alerts;
     }
 
@@ -106,4 +97,9 @@ public class AlertRepository {
 
     //Método para recuperar las descripiciones e instrucciones de todas las alertas
 
+
+    @Override
+    public void close() {
+        dbHelper.close();
+    }
 }
