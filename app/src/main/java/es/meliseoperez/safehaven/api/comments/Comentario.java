@@ -18,6 +18,16 @@ public class Comentario {
     @SerializedName("image_url")
     private String imageUrl;
 
+    public Comentario(int id, int userId, String commentText, String imageUrl) {
+        this.id = id;
+        this.userId = userId;
+        this.commentText = commentText;
+        this.imageUrl = imageUrl;
+    }
+
+    public Comentario(int i, String commentText, String url, int i1) {
+    }
+
     // Omitido: createdAt, updatedAt y getters y setters para todos los campos
 
     public String getCommentText() {
