@@ -18,18 +18,20 @@ public class Zona {
     private final String nivelAlarma; // Nombre de la zona
     private final String descripcion;
     private final String indicaciones;
+    private final int idAlerta;
 
 
 
     /**
      * Constructor que recibe un String con las coordenadas.
      */
-    public Zona(int id, List<LatLng> coordenadas, String color, String descripcion, String indicaciones) {
+    public Zona(List<LatLng> coordenadas, String color, String descripcion, String indicaciones, int idAlerta) {
         this.coordenadas = coordenadas;
         this.descripcion = descripcion;
         this.nivelAlarma = color;
 
         this.indicaciones = indicaciones;
+        this.idAlerta = idAlerta;
     }
 
 
@@ -83,7 +85,7 @@ public class Zona {
      * @param mapa Instancia de GoogleMap donde se dibujará la zona.
      */
     public void dibujarZona(GoogleMap mapa, Context context ){
-        InformacionPoligo infoPoligono=new InformacionPoligo(this.descripcion,this.indicaciones);
+        InformacionPoligo infoPoligono = new InformacionPoligo(this.idAlerta, this.descripcion,this.indicaciones);
 
         // Asegúrate de que las coordenadas no estén vacías o no inicializadas.
         if (coordenadas == null || coordenadas.isEmpty()) {
@@ -111,7 +113,9 @@ public class Zona {
             // Muestra un mensaje con el ID del polígono.
             AlertDialog.Builder builder=new AlertDialog.Builder(context);
             builder.setTitle("Información Alerta");
-            builder.setMessage("Descripción: " + "\n" + tag.getDescription()+
+            builder.setMessage(
+                    "Alerta ID: " + tag.getIdAlerta() +
+                    "\nDescripción: " + "\n" + tag.getDescription() +
                     "\nIndicaciones: " + "\n" + tag.getIndicaciones());
             builder.setPositiveButton("OK", (dialog, wicht) -> dialog.dismiss());
 
@@ -125,9 +129,12 @@ public class Zona {
         private final String description;
         private final String indicaciones;
 
-        public InformacionPoligo(String description, String indicaciones) {
+        private final int idAlerta;
+
+        public InformacionPoligo(int idAlerta, String description, String indicaciones) {
             this.description = description;
             this.indicaciones = indicaciones;
+            this.idAlerta = idAlerta;
         }
 
         public String getDescription() {
@@ -137,5 +144,6 @@ public class Zona {
         public String getIndicaciones() {
             return indicaciones;
         }
+        public int getIdAlerta(){return idAlerta;}
     }
 }

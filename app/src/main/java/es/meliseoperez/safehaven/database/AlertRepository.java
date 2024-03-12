@@ -84,6 +84,8 @@ public class AlertRepository implements AutoCloseable{
     // Convierte un registro de Cursor a un objeto AlertInfo
     private AlertInfo cursorToAlert(Cursor cursor) {
         AlertInfo alert = new AlertInfo();
+        alert.id = Integer.parseInt(extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_ID));
+        alert.effective = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_EFFECTIVE);
         alert.onset =extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_ONSET);
         alert.expires = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_EXPIRES);
         alert.senderName = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_SENDER_NAME);

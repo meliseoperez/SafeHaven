@@ -179,6 +179,8 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
             List<LatLng> coordenadasProcesadas=Zona.parsearCoordenadas(alert.getPolygon());
             alert.setCoordenadas(coordenadasProcesadas);
 
+            int idAlerta = alert.getId();
+
         }
         return  alerts;
     }
