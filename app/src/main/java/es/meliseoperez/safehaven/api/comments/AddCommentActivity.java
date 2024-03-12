@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.meliseoperez.safehaven.R;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 
 public class AddCommentActivity extends AppCompatActivity {
 
@@ -48,17 +50,22 @@ public class AddCommentActivity extends AppCompatActivity {
     private void submitComment() {
         // Obtén el comentario del EditText
         comment = editTextComment.getText().toString().trim();
-        //storeApi();
+        storeApi();
     }
     private void storeApi(){
         SharedPreferences sharedPreferences = this.getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token","");
         String usuario = sharedPreferences.getString("idUsuario","");
 
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        MediaType JSON= MediaType.parse("application/json; utf-8");
         JSONObject requestBody = new JSONObject();
         try{
+            requestBody.put("alert_id","1000");
             requestBody.put("user_id", usuario);
             requestBody.put("comment_text", comment);
+            requestBody.put("image_url","https://example.com/image.jpg");
         } catch (JSONException e) {
             Log.e("JSONError", "Error creating JSON request body", e);
             Toast.makeText(this, "Error al enviar el comentario", Toast.LENGTH_SHORT).show();
@@ -87,7 +94,7 @@ public class AddCommentActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-type", "application/json");
-                headers.put("Authorization","Bearer " + token);
+                headers.put("Authorization","Bearer " + "47|CvSlEQmdDOxJVoJFRkzLZPG89OilRtO968pvjkuS8c54375d");
                 return headers;
             }
         };
