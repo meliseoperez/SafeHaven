@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Agrega los elementos de la UI para mostrar la información de la zona -->
+    <TextView
+        android:id="@+id/texVistaDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:padding="8dp"/>
+    <TextView
+        android:id="@+id/texVistaIntrucciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Instrución"
+        android:padding="8dp"/>
+    <Button
+        android:id="@+id/crearComentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear Comentario" />
+
+    <Button
+        android:id="@+id/verComentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver Comentarios" />
+
+
+</LinearLayout>
