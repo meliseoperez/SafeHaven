@@ -8,6 +8,7 @@ public class AlertContract {
     }
     public static class AlertEntry implements BaseColumns {
         public static final String TABLE_NAME = "alerts";
+        public static final String COLUMN_ID = "id";
         public static final String COLUMN_EFFECTIVE = "effective";
         public static final String COLUMN_ONSET = "onset";
         public static final String COLUMN_EXPIRES = "expires";

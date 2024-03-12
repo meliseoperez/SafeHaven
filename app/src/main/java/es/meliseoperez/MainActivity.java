@@ -1,7 +1,9 @@
 package es.meliseoperez;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
            // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
            for (AlertInfo alerta : listaAlertas) {
                long id = alertRepo.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
-               Log.e(TAG, "Alerta insertada : " + alerta.getDescription());
+               Log.e(TAG, "Alerta insertada : " + alerta.getId());
                if (id == -1) {
                    Log.e(TAG, "Error al insertar alerta: " + alerta);
                }
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         //polygonList=customMapsFragment.cargarZonas(alertRepository);
         List<Zona> zonas=new ArrayList<>();
         for(AlertInfo alerta: alertas){
-            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
+            Zona zona= new Zona(alerta.getId(),alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
             zonas.add(zona);
         }
         customMapsFragment.addZonesToMap(zonas);
@@ -194,15 +196,24 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_usuario:
-                // Abrir actividad o fragmento relacionado con Usuario
+
                 return true;
             case R.id.menu_comentarios:
-                Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
-                startActivity(intent);
+                if(acesoPermitido())
+                {
+                    Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
+                    startActivity(intent);
+                }else
+                    Toast.makeText(getApplicationContext(), "Solo para usuarios Premium.",Toast.LENGTH_LONG).show();
+
                 return true;
             case R.id.menu_salir:
                 // Manejar la acción de salir
-                finish(); // Por ejemplo, para cerrar la actividad
+                finish();
+                return true;
+            case R.id.menu_log_out:
+                // Manejar la acción de salir
+                menu_log_out();
                 return true;
             case R.id.menu_acerca_de:
                 // Mostrar un dialogo o actividad sobre "Acerca de"
@@ -211,5 +222,26 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    public void menu_log_out(){
+        //Obtener el SharedPreferencees
+        SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
+        //Obtener el editor de SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        //Eliminar las claves token y idUsuario
+        //editor.remove("token");
+        //editor.remove("idUsuarioo");
+        editor.clear();
+        editor.apply();
+        finish();
+    }
+    public boolean acesoPermitido(){
+        boolean permitido=true;
+        SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
+        String tipoUsuario=sharedPreferences.getString("tipoUsuario","basico");
+        if(tipoUsuario.equals("null") || tipoUsuario.equals("basico")){
+            permitido=false;
+        }
+        return permitido;
+    }
 }
