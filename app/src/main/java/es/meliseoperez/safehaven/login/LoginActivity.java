@@ -97,11 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         String token = response.getString("token");
                         String idUsario = response.getString("idUsuario");
+                        String tipoUsuario = response.getString("typeUser");
                         //Almacenamiento del token utilizo SharedPreferences
                         SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("token",token);
                         editor.putString("idUsuario", idUsario);
+                        editor.putString("tipoUsuario", tipoUsuario);
                         editor.apply();
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
