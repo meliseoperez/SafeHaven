@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +36,7 @@ public class ComentariosActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private ComentariosAdapter comentariosAdapter;
 
+    private Button buttonAddComment;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -52,17 +56,9 @@ public class ComentariosActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            // Finaliza la actividad actual y vuelve a la anterior en la pila de actividades
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 
     private void cargarComentarios() {
@@ -138,4 +134,33 @@ public class ComentariosActivity extends AppCompatActivity {
 
         return comentarioList;
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.comentarios_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // Finaliza la actividad actual y vuelve a la anterior en la pila de actividades
+            finish();
+            return true;
+        }
+        if (id == R.id.action_add_comment) {
+            Intent intent = new Intent(ComentariosActivity.this, AddCommentActivity.class);
+            startActivity(intent);
+            Log.d("COMENTARIOS: ","LLAMADA A AGREGAR COMENTRAIOS");
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        cargarComentarios();
+    }
+
 }
