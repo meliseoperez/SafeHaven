@@ -15,8 +15,15 @@
     <item
         android:id="@+id/menu_salir"
         android:icon="@drawable/baseline_disabled_by_default_black_18"
+        android:tooltipText="No es necesario introducir email y password para abrir app"
         android:title="Salir"
-        app:showAsAction="ifRoom"/>/>
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_log_out"
+        android:icon="@drawable/baseline_help_black_18"
+        android:title="Cerrar Sesión"
+        android:tooltipText="Tendrá que ingresar email y password para logearse."
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_acerca_de"
         android:icon="@drawable/baseline_help_black_18"

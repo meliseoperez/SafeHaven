@@ -1,7 +1,9 @@
 package es.meliseoperez;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -194,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_usuario:
-                // Abrir actividad o fragmento relacionado con Usuario
+
                 return true;
             case R.id.menu_comentarios:
                 Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
@@ -202,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_salir:
                 // Manejar la acción de salir
-                finish(); // Por ejemplo, para cerrar la actividad
+                finish();
+                return true;
+            case R.id.menu_log_out:
+                // Manejar la acción de salir
+                menu_log_out();
                 return true;
             case R.id.menu_acerca_de:
                 // Mostrar un dialogo o actividad sobre "Acerca de"
@@ -211,5 +217,17 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    public void menu_log_out(){
+        //Obtener el SharedPreferencees
+        SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
+        //Obtener el editor de SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        //Eliminar las claves token y idUsuario
+        //editor.remove("token");
+        //editor.remove("idUsuarioo");
+        editor.clear();
+        editor.apply();
+        finish();
+    }
 }
