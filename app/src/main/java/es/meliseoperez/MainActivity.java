@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         //polygonList=customMapsFragment.cargarZonas(alertRepository);
         List<Zona> zonas=new ArrayList<>();
         for(AlertInfo alerta: alertas){
-            Zona zona= new Zona(alerta.getId(),alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
+            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction(),alerta.getId());
             zonas.add(zona);
         }
         customMapsFragment.addZonesToMap(zonas);
