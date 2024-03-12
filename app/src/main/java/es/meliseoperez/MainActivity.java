@@ -199,8 +199,13 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.menu_comentarios:
-                Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
-                startActivity(intent);
+                if(acesoPermitido())
+                {
+                    Intent intent = new Intent(MainActivity.this, ComentariosActivity.class);
+                    startActivity(intent);
+                }else
+                    Toast.makeText(getApplicationContext(), "Solo para usuarios Premium.",Toast.LENGTH_LONG).show();
+
                 return true;
             case R.id.menu_salir:
                 // Manejar la acción de salir
@@ -229,5 +234,14 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
         editor.apply();
         finish();
+    }
+    public boolean acesoPermitido(){
+        boolean permitido=true;
+        SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
+        String tipoUsuario=sharedPreferences.getString("tipoUsuario","basico");
+        if(tipoUsuario.equals("null") || tipoUsuario.equals("basico")){
+            permitido=false;
+        }
+        return permitido;
     }
 }
