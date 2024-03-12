@@ -45,11 +45,9 @@
             android:name=".api.comments.ComentariosActivity"
             android:exported="true">
         </activity>
-        <activity
-            android:name=".api.comments.ComentariosActivity"
+        <activity android:name=".api.comments.AddCommentActivity"
             android:exported="true">
         </activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXnes5Bg7IVpgTQw_WHEh8BFU1axruwZM" />
