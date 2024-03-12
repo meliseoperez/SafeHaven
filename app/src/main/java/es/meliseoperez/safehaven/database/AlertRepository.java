@@ -35,6 +35,7 @@ public class AlertRepository implements AutoCloseable{
     // Inserta una nueva alerta en la base de datos
     public long insertAlert(AlertInfo alert, String tableName) {
         ContentValues values = new ContentValues();
+        values.put(AlertContract.AlertEntry.COLUMN_ID, alert.id);
         values.put(AlertContract.AlertEntry.COLUMN_EFFECTIVE, alert.effective);
         values.put(AlertContract.AlertEntry.COLUMN_ONSET, alert.onset);
         values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, alert.expires);

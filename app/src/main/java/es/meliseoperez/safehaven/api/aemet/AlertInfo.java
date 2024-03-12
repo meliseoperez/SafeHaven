@@ -4,10 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import es.meliseoperez.safehaven.database.AlertRepository;
-
 public class AlertInfo {
-    private int id;
+    public int id;
     public String effective;
     public String onset;
     public String expires;
@@ -120,7 +118,8 @@ public class AlertInfo {
     public String toString() {
         // Formato personalizado para la impresión de información de alerta.
         return "AlertInfo{" +
-                "effective='" + effective + '\'' +
+                "id=" + id + '\'' +
+                ", effective='" + effective + '\'' +
                 ", onset='" + onset + '\'' +
                 ", expires='" + expires + '\'' +
                 ", senderName='" + senderName + '\'' +

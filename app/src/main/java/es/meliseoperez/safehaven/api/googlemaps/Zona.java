@@ -24,7 +24,7 @@ public class Zona {
     /**
      * Constructor que recibe un String con las coordenadas.
      */
-    public Zona(List<LatLng> coordenadas, String color, String descripcion, String indicaciones) {
+    public Zona(int id, List<LatLng> coordenadas, String color, String descripcion, String indicaciones) {
         this.coordenadas = coordenadas;
         this.descripcion = descripcion;
         this.nivelAlarma = color;
