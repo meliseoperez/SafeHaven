@@ -98,7 +98,42 @@ public class AlertRepository implements AutoCloseable{
         return alert;
     }
 
-    //Método para recuperar las descripiciones e instrucciones de todas las alertas
+    public AlertInfo getAlertById(int alertID) {
+        AlertInfo alert = null;
+        Cursor cursor = null;
+
+        // Asegúrate de que 'database' esté inicializado
+        if (database != null) {
+            try {
+                String seleccion = AlertContract.AlertEntry.COLUMN_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alertID)};
+
+                cursor = database.query(
+                        AlertContract.AlertEntry.TABLE_NAME,
+                        null,
+                        seleccion,
+                        selectionArgs,
+                        null,
+                        null,
+                        null
+                );
+
+                if (cursor.moveToFirst()) {
+                    alert = cursorToAlert(cursor);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error al buscar la alerta por ID", e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else {
+            Log.e(TAG, "Database is null, cannot query");
+        }
+        return alert;
+    }
+
 
 
     @Override
