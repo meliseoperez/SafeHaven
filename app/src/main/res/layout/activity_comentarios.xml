@@ -7,8 +7,14 @@
     tools:context=".api.comments.ComentariosActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewComentarios"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+         android:id="@+id/recyclerViewComentarios"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         />
+     <!-- FrameLayout como contenedor de fragmentos -->
+    <FrameLayout
+        android:id="@+id/fragment_container_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
