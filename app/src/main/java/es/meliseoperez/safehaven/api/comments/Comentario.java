@@ -25,6 +25,10 @@ public class Comentario {
         this.imageUrl = imageUrl;
     }
 
+    public Comentario() {
+        this.id = id;
+    }
+
     public Comentario(int i, String commentText, String url, int i1) {
     }
 

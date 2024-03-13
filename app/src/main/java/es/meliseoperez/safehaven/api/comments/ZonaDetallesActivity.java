@@ -1,11 +1,14 @@
 package es.meliseoperez.safehaven.api.comments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,8 @@ public class ZonaDetallesActivity extends AppCompatActivity {
     private int zonaID;
     private String descripcion;
     private String indicaciones;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,22 +47,31 @@ public class ZonaDetallesActivity extends AppCompatActivity {
         buttonVerComentarios = findViewById(R.id.verComentario);
 
         buttonVerComentarios.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ComentariosActivity.class);
-                intent.putExtra("ZONA_ID", zonaID);
-                startActivity(intent);
+                if(acesoPermitido())
+                {
+                    Intent intent = new Intent(getApplicationContext(), ComentariosActivity.class);
+                    intent.putExtra("ZONA_ID", zonaID);
+                    intent.putExtra("TIPO","alert");
+                    startActivity(intent);
+                }else
+                    Toast.makeText(getApplicationContext(), "Solo para usuarios Premium.",Toast.LENGTH_LONG).show();
             }
         });
         buttonCrearComentario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
-                intent.putExtra("ZONA_ID", zonaID);
-                startActivity(intent);
+                if(acesoPermitido())
+                {
+                    Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
+                    intent.putExtra("ZONA_ID", zonaID);
+                    startActivity(intent);
+                }else
+                    Toast.makeText(getApplicationContext(), "Solo para usuarios Premium.",Toast.LENGTH_LONG).show();
             }
         });
-
         //Habilitar la flecha de retorno en el ActionBar
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,5 +85,14 @@ public class ZonaDetallesActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public boolean acesoPermitido(){
+        boolean permitido=true;
+        SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
+        String tipoUsuario=sharedPreferences.getString("tipoUsuario","basico");
+        if(tipoUsuario.equals("null") || tipoUsuario.equals("basico")){
+            permitido=false;
+        }
+        return permitido;
     }
 }
