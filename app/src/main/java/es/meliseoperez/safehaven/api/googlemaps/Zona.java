@@ -126,7 +126,7 @@ public class Zona {
                 AlertInfo alerta = accesoBD.getAlertById(idAlertaClickeada);
                 //Iniciar ZonaDetallesActivity pasando el ID de la zona como extra
                 Intent intent = new Intent(context, ZonaDetallesActivity.class);
-                intent.putExtra("ZONA_ID", idAlerta);
+                intent.putExtra("ZONA_ID", idAlertaClickeada);
 
                 intent.putExtra("ZONA_DESCRIPCION", alerta.getDescription() != null ?  alerta.getDescription() : "No hay descripción para la alerta." );
                 intent.putExtra("ZONA_INSTRUCCIONES", alerta.getInstruction() != null ? alerta.getInstruction() : "No hay instrucciones para la alerta.");
