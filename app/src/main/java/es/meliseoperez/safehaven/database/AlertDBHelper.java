@@ -13,7 +13,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }    private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + AlertContract.AlertEntry.TABLE_NAME + " (" +
-                    AlertContract.AlertEntry._ID + " INTEGER PRIMARY KEY," +
+                    AlertContract.AlertEntry.COLUMN_ID + " INTEGER," +
                     AlertContract.AlertEntry.COLUMN_EFFECTIVE + " TEXT," +
                     AlertContract.AlertEntry.COLUMN_ONSET + " TEXT," +
                     AlertContract.AlertEntry.COLUMN_EXPIRES + " TEXT," +
