@@ -58,9 +58,6 @@ public class ComentariosActivity extends AppCompatActivity {
         }
 
     }
-
-
-
     private void cargarComentarios() {
         String token = sharedPreferences.getString("token","");
         OkHttpClient client = new OkHttpClient();

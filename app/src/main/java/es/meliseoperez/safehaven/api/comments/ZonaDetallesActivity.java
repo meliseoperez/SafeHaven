@@ -2,10 +2,12 @@ package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.meliseoperez.safehaven.R;
@@ -56,5 +58,18 @@ public class ZonaDetallesActivity extends AppCompatActivity {
             }
         });
 
+        //Habilitar la flecha de retorno en el ActionBar
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
