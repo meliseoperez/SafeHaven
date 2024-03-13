@@ -31,6 +31,7 @@ import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
 import es.meliseoperez.safehaven.api.aemet.MyCallBack;
 import es.meliseoperez.safehaven.api.comments.ComentariosActivity;
+import es.meliseoperez.safehaven.api.comments.ComentariosAdapter;
 import es.meliseoperez.safehaven.api.googlemaps.CustomMapsFragment;
 import es.meliseoperez.safehaven.api.googlemaps.Zona;
 import es.meliseoperez.safehaven.database.AlertContract;
@@ -43,13 +44,19 @@ public class MainActivity extends AppCompatActivity {
     private CustomMapsFragment customMapsFragment;
     private AlertRepository alertRepository;
     private List<AlertInfo> listaAlertas;
-
+    private ComentariosAdapter comentariosAdapter;
+    private Integer id;
+    private String tipo;
 
     private static final int LOCATION_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tipo = "";
+        id = null;
+        comentariosAdapter = new ComentariosAdapter(new ArrayList<>());
         // Inicializa alertRepository aquí
         alertRepository = new AlertRepository(this);
         // Establezco el contenido de la vista desde el layout del recurso XML.
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
            // Inserto cada alerta en la base de datos, registrando cualquier problema en el log.
            for (AlertInfo alerta : listaAlertas) {
                long id = alertRepo.insertAlert(alerta, AlertContract.AlertEntry.TABLE_NAME);
-               Log.e(TAG, "Alerta insertada : " + alerta.getDescription());
+               Log.e(TAG, "Alerta insertada : " + alerta.getId());
                if (id == -1) {
                    Log.e(TAG, "Error al insertar alerta: " + alerta);
                }
@@ -162,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         //polygonList=customMapsFragment.cargarZonas(alertRepository);
         List<Zona> zonas=new ArrayList<>();
         for(AlertInfo alerta: alertas){
-            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction());
+            Zona zona= new Zona(alerta.getCoordenadas(),alerta.getColor(),alerta.getDescription(), alerta.getInstruction(),alerta.getId());
             zonas.add(zona);
         }
         customMapsFragment.addZonesToMap(zonas);
@@ -244,4 +251,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return permitido;
     }
+
 }

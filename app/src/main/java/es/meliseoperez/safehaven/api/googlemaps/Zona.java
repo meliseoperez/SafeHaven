@@ -1,35 +1,44 @@
 package es.meliseoperez.safehaven.api.googlemaps;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.meliseoperez.safehaven.api.aemet.AlertInfo;
+import es.meliseoperez.safehaven.api.comments.ZonaDetallesActivity;
+import es.meliseoperez.safehaven.database.AlertRepository;
+
 public class Zona {
 
     private final List<LatLng> coordenadas;// Lista que almacena las coordenadas de la zona.
     private final String nivelAlarma; // Nombre de la zona
-    private final String descripcion;
-    private final String indicaciones;
+    public final String descripcion;
+    public final String indicaciones;
+    public final int idAlerta;
 
 
 
     /**
      * Constructor que recibe un String con las coordenadas.
      */
-    public Zona(List<LatLng> coordenadas, String color, String descripcion, String indicaciones) {
+    public Zona(List<LatLng> coordenadas, String color, String descripcion, String indicaciones, int idAlerta) {
         this.coordenadas = coordenadas;
         this.descripcion = descripcion;
         this.nivelAlarma = color;
 
         this.indicaciones = indicaciones;
+        this.idAlerta = idAlerta;
     }
 
 
@@ -83,7 +92,7 @@ public class Zona {
      * @param mapa Instancia de GoogleMap donde se dibujará la zona.
      */
     public void dibujarZona(GoogleMap mapa, Context context ){
-        InformacionPoligo infoPoligono=new InformacionPoligo(this.descripcion,this.indicaciones);
+        InformacionPoligo infoPoligono = new InformacionPoligo(this.idAlerta, this.descripcion,this.indicaciones);
 
         // Asegúrate de que las coordenadas no estén vacías o no inicializadas.
         if (coordenadas == null || coordenadas.isEmpty()) {
@@ -103,21 +112,28 @@ public class Zona {
         // Agrega el polígono al mapa y guarda la instancia del polígono.
         Polygon polygon = mapa.addPolygon(polygonOptions);
         polygon.setTag(infoPoligono); // Establece la descripcion como tag para el polígono.
+        mapa.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(@NonNull Polygon polygon) {
+                // Obtiene el objeto InformacionPoligo asociado al polígono clickeado.
+                InformacionPoligo infoPoligono = (InformacionPoligo) polygon.getTag();
 
-        // Establece el evento de clic para el polígono.
-        mapa.setOnPolygonClickListener(polygonClicked -> {
-            // Aquí se manejará el clic en el polígono.
-            InformacionPoligo tag = (InformacionPoligo) polygonClicked.getTag();
-            // Muestra un mensaje con el ID del polígono.
-            AlertDialog.Builder builder=new AlertDialog.Builder(context);
-            builder.setTitle("Información Alerta");
-            builder.setMessage("Descripción: " + "\n" + tag.getDescription()+
-                    "\nIndicaciones: " + "\n" + tag.getIndicaciones());
-            builder.setPositiveButton("OK", (dialog, wicht) -> dialog.dismiss());
+                // Ahora puedes usar infoPoligono para obtener el idAlerta específico de este polígono.
+                int idAlertaClickeada = infoPoligono.getIdAlerta();
 
-            AlertDialog alert = builder.create();
-            alert.show();
-           // Toast.makeText(context, "ID de la zona: " + tag, Toast.LENGTH_LONG).show();
+                AlertRepository accesoBD = new AlertRepository(context.getApplicationContext());
+                accesoBD.open();
+                AlertInfo alerta = accesoBD.getAlertById(idAlertaClickeada);
+                //Iniciar ZonaDetallesActivity pasando el ID de la zona como extra
+                Intent intent = new Intent(context, ZonaDetallesActivity.class);
+                intent.putExtra("ZONA_ID", idAlertaClickeada);
+
+                intent.putExtra("ZONA_DESCRIPCION", alerta.getDescription() != null ?  alerta.getDescription() : "No hay descripción para la alerta." );
+                intent.putExtra("ZONA_INSTRUCCIONES", alerta.getInstruction() != null ? alerta.getInstruction() : "No hay instrucciones para la alerta.");
+
+
+                context.startActivity(intent);
+            }
         });
     }
     //Clase auxiliar para almacenar información sobre alertas,
@@ -125,9 +141,12 @@ public class Zona {
         private final String description;
         private final String indicaciones;
 
-        public InformacionPoligo(String description, String indicaciones) {
+        private final int idAlerta;
+
+        public InformacionPoligo(int idAlerta, String description, String indicaciones) {
             this.description = description;
             this.indicaciones = indicaciones;
+            this.idAlerta = idAlerta;
         }
 
         public String getDescription() {
@@ -137,5 +156,6 @@ public class Zona {
         public String getIndicaciones() {
             return indicaciones;
         }
+        public int getIdAlerta(){return idAlerta;}
     }
 }

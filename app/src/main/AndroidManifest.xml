@@ -19,37 +19,41 @@
         android:theme="@style/Theme.SafeHaven"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+        <activity
+            android:name=".api.comments.ZonaDetallesActivity"
+            android:exported="false" />
         <!-- SplashScreenActivity configurada como la actividad de inicio -->
-        <activity android:name=".login.SplashScreenActivity"
+        <activity
+            android:name=".login.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name="es.meliseoperez.MainActivity"
             android:exported="true">
+
             <!-- No necesitas un intent-filter con MAIN y LAUNCHER a menos que esta sea la entrada principal de tu aplicación -->
         </activity>
         <activity
-            android:name="es.meliseoperez.safehaven.login.RegisterActivity"
-            android:exported="true">
-
-        </activity>
+            android:name=".login.RegisterActivity"
+            android:exported="true"></activity>
         <activity
             android:name=".api.comments.ComentariosActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".api.comments.AddCommentActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
+        <activity
+            android:name=".api.comments.AddCommentActivity"
+            android:exported="true"></activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXnes5Bg7IVpgTQw_WHEh8BFU1axruwZM" />
     </application>
+
 </manifest>

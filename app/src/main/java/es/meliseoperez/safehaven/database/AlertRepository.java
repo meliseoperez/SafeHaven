@@ -35,6 +35,7 @@ public class AlertRepository implements AutoCloseable{
     // Inserta una nueva alerta en la base de datos
     public long insertAlert(AlertInfo alert, String tableName) {
         ContentValues values = new ContentValues();
+        values.put(AlertContract.AlertEntry.COLUMN_ID, alert.id);
         values.put(AlertContract.AlertEntry.COLUMN_EFFECTIVE, alert.effective);
         values.put(AlertContract.AlertEntry.COLUMN_ONSET, alert.onset);
         values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, alert.expires);
@@ -83,6 +84,8 @@ public class AlertRepository implements AutoCloseable{
     // Convierte un registro de Cursor a un objeto AlertInfo
     private AlertInfo cursorToAlert(Cursor cursor) {
         AlertInfo alert = new AlertInfo();
+        alert.id = Integer.parseInt(extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_ID));
+        alert.effective = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_EFFECTIVE);
         alert.onset =extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_ONSET);
         alert.expires = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_EXPIRES);
         alert.senderName = extractColumnValue(cursor, AlertContract.AlertEntry.COLUMN_SENDER_NAME);
@@ -95,7 +98,42 @@ public class AlertRepository implements AutoCloseable{
         return alert;
     }
 
-    //Método para recuperar las descripiciones e instrucciones de todas las alertas
+    public AlertInfo getAlertById(int alertID) {
+        AlertInfo alert = null;
+        Cursor cursor = null;
+
+        // Asegúrate de que 'database' esté inicializado
+        if (database != null) {
+            try {
+                String seleccion = AlertContract.AlertEntry.COLUMN_ID + " = ?";
+                String[] selectionArgs = {String.valueOf(alertID)};
+
+                cursor = database.query(
+                        AlertContract.AlertEntry.TABLE_NAME,
+                        null,
+                        seleccion,
+                        selectionArgs,
+                        null,
+                        null,
+                        null
+                );
+
+                if (cursor.moveToFirst()) {
+                    alert = cursorToAlert(cursor);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error al buscar la alerta por ID", e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else {
+            Log.e(TAG, "Database is null, cannot query");
+        }
+        return alert;
+    }
+
 
 
     @Override
