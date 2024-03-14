@@ -1,34 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
     <!-- Agrega los elementos de la UI para mostrar la información de la zona -->
+
+    <ImageView
+        android:layout_width="159dp"
+        android:layout_height="117dp"
+        android:background="@mipmap/icon_xxhdpi"
+        app:layout_constraintBottom_toTopOf="@+id/texVistaDescripcion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/texVistaDescripcion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="325dp"
+        android:layout_height="126dp"
+        android:layout_marginTop="172dp"
+        android:padding="8dp"
         android:text="Descripción"
-        android:padding="8dp"/>
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/texVistaIntrucciones"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="325dp"
+        android:layout_height="126dp"
+        android:layout_marginTop="28dp"
+        android:padding="8dp"
         android:text="Instrución"
-        android:padding="8dp"/>
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texVistaDescripcion"
+        app:layout_constraintVertical_bias="0.204" />
+
     <Button
         android:id="@+id/crearComentario"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Crear Comentario" />
+        android:text="Crear Comentario"
+        app:layout_constraintBottom_toTopOf="@+id/verComentario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texVistaIntrucciones"
+        app:layout_constraintVertical_bias="0.56" />
 
     <Button
         android:id="@+id/verComentario"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver Comentarios" />
+        android:text="Ver Comentarios"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texVistaIntrucciones"
+        app:layout_constraintVertical_bias="0.8" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

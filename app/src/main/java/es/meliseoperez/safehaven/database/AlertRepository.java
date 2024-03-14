@@ -140,4 +140,8 @@ public class AlertRepository implements AutoCloseable{
     public void close() {
         dbHelper.close();
     }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
 }

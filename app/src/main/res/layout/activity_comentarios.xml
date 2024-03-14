@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".api.comments.ComentariosActivity">
 
+    <!-- FrameLayout como contenedor de fragmentos -->
+
     <androidx.recyclerview.widget.RecyclerView
-         android:id="@+id/recyclerViewComentarios"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         />
-     <!-- FrameLayout como contenedor de fragmentos -->
+        android:id="@+id/recyclerViewComentarios"
+        android:layout_width="397dp"
+        android:layout_height="320dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container_comments"
+        app:layout_constraintVertical_bias="0.428" />
+
     <FrameLayout
         android:id="@+id/fragment_container_comments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toTopOf="@id/recyclerViewComentarios"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="294dp" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

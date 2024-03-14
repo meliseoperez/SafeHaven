@@ -5,9 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/cardview_shadow_start_color"
     android:gravity="center_horizontal">
 
+    <ImageView
+        android:layout_width="159dp"
+        android:layout_height="117dp"
+        android:background="@mipmap/icon_xxhdpi" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,29 +69,40 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="8dp"
         android:background="@color/white">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <RadioGroup
-            android:id="@+id/rgTypeUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <RadioButton
-                android:id="@+id/rbBasic"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/rgTypeUser"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Básico"
-                android:textColor="@color/black"/>
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent">
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="8dp"/>
 
-            <RadioButton
-                android:id="@+id/rbAdvanced"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Avanzado"
-                android:textColor="@color/black"/>
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/rbBasic"
+                    android:layout_width="89dp"
+                    android:layout_height="wrap_content"
+                    android:text="Básico"
+                    android:textColor="@color/black" />
+                <Space
+                    android:layout_width="60dp"
+                    android:layout_height="8dp"/>
+
+                <RadioButton
+                    android:id="@+id/rbAdvanced"
+                    android:layout_width="113dp"
+                    android:layout_height="wrap_content"
+                    android:text="Avanzado"
+                    android:textColor="@color/black" />
+            </RadioGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
