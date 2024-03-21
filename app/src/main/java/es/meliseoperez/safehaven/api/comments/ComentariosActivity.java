@@ -76,6 +76,7 @@ public class ComentariosActivity extends AppCompatActivity {
             this.tipo = "user";
             ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
             if(id !=0 ){
+                id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
                 consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
             }else{
                 consultaComentariosAPI.cargaComentarios(null,tipo);
