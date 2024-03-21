@@ -2,6 +2,7 @@ package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,7 @@ public class ConsulataComentariosAPI {
                         }
                     } catch (JsonParseException e) {
                         showErrorToast("Error al procesar la respuesta del servidor.");
+                        Log.e("Error al procesar response reserver",e.toString());
                     }
                 }
             }
