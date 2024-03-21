@@ -19,9 +19,11 @@ import es.meliseoperez.safehaven.R;
 public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.ViewHolder> {
 
     private List<Comentario> comentarioList;
+    private OnComentarioClickListener listener;
 
-    public ComentariosAdapter(List<Comentario> comentarioList){
+    public ComentariosAdapter(List<Comentario> comentarioList, OnComentarioClickListener listener){
         this.comentarioList = comentarioList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -60,6 +62,17 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
             commentTextView = itemView.findViewById(R.id.commentTextView);
             commentImageView = itemView.findViewById(R.id.commentImageView);
             //Inicializar otros elementos de la vista
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION){
+                        listener.onComentarioClick(comentarioList.get(getAdapterPosition()));
+                    }
+                }
+            });
         }
+    }
+    public interface OnComentarioClickListener{
+        void onComentarioClick(Comentario comentario);
     }
 }

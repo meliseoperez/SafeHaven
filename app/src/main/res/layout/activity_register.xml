@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal">
+    android:padding="16dp">
 
     <ImageView
         android:layout_width="159dp"
         android:layout_height="117dp"
         android:background="@mipmap/icon_xxhdpi" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,10 +22,10 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:hint="Nombre"
             android:inputType="text"
             android:padding="16dp"
-            android:background="@color/white"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -38,10 +39,10 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="16dp"
-            android:background="@color/white"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -55,10 +56,10 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:hint="Contraseña"
             android:inputType="textPassword"
             android:padding="16dp"
-            android:background="@color/white"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -67,8 +68,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="8dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:cardCornerRadius="8dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -81,9 +83,10 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent">
+
                 <Space
                     android:layout_width="50dp"
-                    android:layout_height="8dp"/>
+                    android:layout_height="8dp" />
 
                 <RadioButton
                     android:id="@+id/rbBasic"
@@ -91,9 +94,10 @@
                     android:layout_height="wrap_content"
                     android:text="Básico"
                     android:textColor="@color/black" />
+
                 <Space
                     android:layout_width="60dp"
-                    android:layout_height="8dp"/>
+                    android:layout_height="8dp" />
 
                 <RadioButton
                     android:id="@+id/rbAdvanced"
@@ -111,30 +115,34 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
         app:cardCornerRadius="8dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:padding="16dp">
+
             <Button
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Registrarse"
-                android:padding="16dp"
                 android:background="@color/material_dynamic_neutral10"
+                android:padding="16dp"
+                android:text="Registrarse"
                 android:textColor="@color/white" />
+
             <Space
                 android:layout_width="16dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/btnCancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelar"
-                android:padding="16dp"
                 android:background="@color/material_dynamic_neutral10"
+                android:padding="16dp"
+                android:text="Cancelar"
                 android:textColor="@color/white" />
         </LinearLayout>
 

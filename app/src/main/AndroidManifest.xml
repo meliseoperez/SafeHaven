@@ -14,15 +14,16 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/icon_hdpi"
         android:label="@string/app_name"
-
         android:supportsRtl="true"
         android:theme="@style/Theme.SafeHaven"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".api.comments.ZonaDetallesActivity"
+            android:name=".api.comments.UDCommentActivity"
             android:exported="false" />
-        <!-- SplashScreenActivity configurada como la actividad de inicio -->
+        <activity
+            android:name=".api.comments.ZonaDetallesActivity"
+            android:exported="false" /> <!-- SplashScreenActivity configurada como la actividad de inicio -->
         <activity
             android:name=".login.SplashScreenActivity"
             android:exported="true">
