@@ -71,7 +71,7 @@ public class ComentariosActivity extends AppCompatActivity {
             finish();
             return true;
         }
-        if (idItem == R.id.action_add_comment) {
+        if (idItem == R.id.mis_comentarios) {
             // Crea una instancia de ConsultaComentariosAPI y llama a cargarComentarios
             this.tipo = "user";
             ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
@@ -90,6 +90,7 @@ public class ComentariosActivity extends AppCompatActivity {
         super.onResume();
         ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
         if(id!=0 || tipo != null){
+            id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
             consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
         }else{
             consultaComentariosAPI.cargaComentarios(null,tipo);
