@@ -1,6 +1,7 @@
 package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,13 +16,14 @@ import java.util.ArrayList;
 
 import es.meliseoperez.safehaven.R;
 
-public class ComentariosActivity extends AppCompatActivity {
+public class ComentariosActivity extends AppCompatActivity implements ComentariosAdapter.OnComentarioClickListener {
 
     private RecyclerView recyclerView;
     private SharedPreferences sharedPreferences;
     private ComentariosAdapter comentariosAdapter;
     private Integer id;
     private String tipo;
+    private String idComentarios;
     private Button buttonAddComment;
     @Override
     protected void onCreate(Bundle saveInstanceState){
@@ -31,7 +33,8 @@ public class ComentariosActivity extends AppCompatActivity {
         // Código existente para recibir el zonaID
 
         tipo = getIntent().getStringExtra("TIPO");
-        id =getIntent().getIntExtra("ZONA_ID",0);
+        id = getIntent().getIntExtra("ZONA_ID",0);
+        idComentarios = getIntent().getStringExtra("idComent");
         recyclerView = findViewById(R.id.recyclerViewComentarios);
 
         sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
@@ -39,7 +42,7 @@ public class ComentariosActivity extends AppCompatActivity {
             id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
         }
         //Configurar RecyclerView con un adaptador inicial vacío o con algún tipo de indicador de carga
-        comentariosAdapter = new ComentariosAdapter(new ArrayList<>());
+        comentariosAdapter = new ComentariosAdapter(new ArrayList<>(),this);
         recyclerView.setAdapter(comentariosAdapter);
 
         // Establecer un LayoutManager para el RecyclerView
@@ -71,11 +74,12 @@ public class ComentariosActivity extends AppCompatActivity {
             finish();
             return true;
         }
-        if (idItem == R.id.action_add_comment) {
+        if (idItem == R.id.mis_comentarios) {
             // Crea una instancia de ConsultaComentariosAPI y llama a cargarComentarios
             this.tipo = "user";
             ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
             if(id !=0 ){
+                id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
                 consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
             }else{
                 consultaComentariosAPI.cargaComentarios(null,tipo);
@@ -90,10 +94,21 @@ public class ComentariosActivity extends AppCompatActivity {
         super.onResume();
         ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
         if(id!=0 || tipo != null){
+            id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
             consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
         }else{
             consultaComentariosAPI.cargaComentarios(null,tipo);
         }
     }
 
+    @Override
+    public void onComentarioClick(Comentario comentario) {
+        Comentario co=comentario;
+        String  userId = String.valueOf(co.getUserId());
+        int idComen =co.getId();
+        Intent intent =  new Intent(this, UDCommentActivity.class);
+        intent.putExtra("usuarioId", userId);
+        intent.putExtra("comentarioId", idComen);
+        startActivity(intent);
+    }
 }

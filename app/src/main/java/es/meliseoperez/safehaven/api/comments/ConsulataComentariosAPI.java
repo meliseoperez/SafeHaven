@@ -75,6 +75,9 @@ public class ConsulataComentariosAPI {
                     } catch (JsonParseException e) {
                         showErrorToast("Error al procesar la respuesta del servidor.");
                         Log.e("Error al procesar response reserver",e.toString());
+                    } catch (Exception e) {
+                        showErrorToast("Error desconocido.");
+                        Log.e("AppError", "Error desconocido", e);
                     }
                 }
             }
@@ -111,4 +114,5 @@ public class ConsulataComentariosAPI {
         }
         return new ArrayList<>();
     }
+
 }
