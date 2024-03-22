@@ -7,45 +7,83 @@
     android:layout_height="match_parent"
     tools:context=".api.comments.UDCommentActivity">
 
-
-    <TextView
-        android:id="@+id/idComent"
-        android:layout_width="match_parent"
-        android:layout_height="459dp"
-        android:gravity="center"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/btnCancelarUD"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnCancelarUD"
-        android:layout_width="wrap_content"
+    <!-- CardView para TextView -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewComent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Cancelar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnElinarComentario"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnModificarComentario"
-        app:layout_constraintTop_toBottomOf="@+id/idComent" />
-
-    <Button
-        android:id="@+id/btnElinarComentario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eliminar"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnCancelarUD"
-        tools:layout_editor_absoluteY="599dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp">
 
+        <TextView
+            android:id="@+id/idComent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="Comentario único" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- CardView para EditText -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewEditarComent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/cardViewComent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp">
+
+        <EditText
+            android:id="@+id/etnuevoComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="Actualizar comentario"
+            android:textSize="18sp"
+            android:gravity="center_vertical"/>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botón Modificar -->
     <Button
         android:id="@+id/btnModificarComentario"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Modificar"
-        app:layout_constraintEnd_toStartOf="@+id/btnCancelarUD"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="599dp" />
+        app:layout_constraintEnd_toStartOf="@+id/btnElinarComentario"
+        app:layout_constraintTop_toBottomOf="@id/cardViewEditarComent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Botón Eliminar -->
+    <Button
+        android:id="@+id/btnElinarComentario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Eliminar"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        app:layout_constraintStart_toEndOf="@+id/btnModificarComentario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewEditarComent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
