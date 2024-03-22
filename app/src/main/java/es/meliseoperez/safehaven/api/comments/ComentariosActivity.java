@@ -110,5 +110,6 @@ public class ComentariosActivity extends AppCompatActivity implements Comentario
         intent.putExtra("usuarioId", userId);
         intent.putExtra("comentarioId", idComen);
         startActivity(intent);
+        finish();
     }
 }
