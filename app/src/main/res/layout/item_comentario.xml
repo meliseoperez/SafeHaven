@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false">
 
-    <TextView
-        android:id="@+id/commentTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="#333"
-        android:padding="4dp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/commentImageView"
-        android:layout_width="233dp"
-        android:layout_height="103dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:scaleType="centerCrop" />
+        <TextView
+            android:id="@+id/commentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="#333"
+            android:textSize="16sp"
+            tools:text="Comentario de ejemplo que muestra cómo se verá el texto en la aplicación. Este es solo un texto de muestra para visualización." />
 
+        <ImageView
+            android:id="@+id/commentImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            tools:src="@mipmap/ic_launcher" />
 
-</LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,120 +1,131 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <ImageView
+        android:id="@+id/imageViewLogo"
         android:layout_width="159dp"
         android:layout_height="117dp"
-        android:background="@mipmap/icon_xxhdpi" />
+        android:layout_marginTop="32dp"
+        android:src="@mipmap/icon_xxhdpi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/cardViewName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLogo">
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:hint="Nombre"
             android:inputType="text"
             android:padding="16dp"
-            android:textColor="@color/black" />
+            android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/cardViewEmail"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewName">
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="16dp"
-            android:textColor="@color/black" />
+            android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/cardViewPassword"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewEmail">
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:hint="Contraseña"
             android:inputType="textPassword"
             android:padding="16dp"
-            android:textColor="@color/black" />
+            android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
 
-    <!-- Agregado RadioGroup para seleccionar el tipo de usuario -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewTypeUser"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewPassword">
+
+    <RadioGroup
+        android:id="@+id/rgTypeUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@color/white"
-        app:cardCornerRadius="8dp">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RadioButton
+            android:id="@+id/rbBasic"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Básico"
+            android:textColor="@android:color/black" />
 
-            <RadioGroup
-                android:id="@+id/rgTypeUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent">
+        <Space
+            android:layout_width="60dp"
+            android:layout_height="wrap_content" />
 
-                <Space
-                    android:layout_width="50dp"
-                    android:layout_height="8dp" />
-
-                <RadioButton
-                    android:id="@+id/rbBasic"
-                    android:layout_width="89dp"
-                    android:layout_height="wrap_content"
-                    android:text="Básico"
-                    android:textColor="@color/black" />
-
-                <Space
-                    android:layout_width="60dp"
-                    android:layout_height="8dp" />
-
-                <RadioButton
-                    android:id="@+id/rbAdvanced"
-                    android:layout_width="113dp"
-                    android:layout_height="wrap_content"
-                    android:text="Avanzado"
-                    android:textColor="@color/black" />
-            </RadioGroup>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <RadioButton
+            android:id="@+id/rbAdvanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avanzado"
+            android:textColor="@android:color/black" />
+    </RadioGroup>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:id="@+id/cardViewButtons"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewTypeUser">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -125,12 +136,13 @@
 
             <Button
                 android:id="@+id/btnRegister"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/material_dynamic_neutral10"
-                android:padding="16dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:text="Registrarse"
-                android:textColor="@color/white" />
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
 
             <Space
                 android:layout_width="16dp"
@@ -138,14 +150,13 @@
 
             <Button
                 android:id="@+id/btnCancelar"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/material_dynamic_neutral10"
-                android:padding="16dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:text="Cancelar"
-                android:textColor="@color/white" />
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

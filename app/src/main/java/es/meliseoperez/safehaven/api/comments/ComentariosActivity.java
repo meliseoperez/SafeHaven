@@ -21,6 +21,7 @@ public class ComentariosActivity extends AppCompatActivity implements Comentario
     private RecyclerView recyclerView;
     private SharedPreferences sharedPreferences;
     private ComentariosAdapter comentariosAdapter;
+    private ConsulataComentariosAPI consultaComentariosAPI;
     private Integer id;
     private String tipo;
     private String idComentarios;
@@ -53,7 +54,7 @@ public class ComentariosActivity extends AppCompatActivity implements Comentario
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         // Crea una instancia de ConsultaComentariosAPI y llama a cargarComentarios
-        ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
+        consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
         if(id !=0 && tipo != null){
             consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
         }else{
@@ -77,28 +78,16 @@ public class ComentariosActivity extends AppCompatActivity implements Comentario
         if (idItem == R.id.mis_comentarios) {
             // Crea una instancia de ConsultaComentariosAPI y llama a cargarComentarios
             this.tipo = "user";
-            ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
+            consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
             if(id !=0 ){
                 id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
-                consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
+                consultaComentariosAPI.cargaComentarios(id,tipo);
             }else{
                 consultaComentariosAPI.cargaComentarios(null,tipo);
             }
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        ConsulataComentariosAPI consultaComentariosAPI = new ConsulataComentariosAPI(this, comentariosAdapter);
-        if(id!=0 || tipo != null){
-            id = Integer.valueOf(sharedPreferences.getString("idUsuario",""));
-            consultaComentariosAPI.cargaComentarios(id,tipo); // Pasa null para cargar todos los comentarios o un idAlert para comentarios específicos.
-        }else{
-            consultaComentariosAPI.cargaComentarios(null,tipo);
-        }
     }
 
     @Override

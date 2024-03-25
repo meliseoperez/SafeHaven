@@ -90,7 +90,7 @@ public class AddCommentActivity extends AppCompatActivity {
 
             RequestBody body = RequestBody.create(JSON, requestBody.toString());
             Request request = new Request.Builder()
-                    .url("http://10.0.2.2:8000/api/v1/store")
+                    .url("http://172.20.10.2:8000/api/v1/store")
                     .post(body)
                     .addHeader("Authorization", "Bearer " + token)
                     .build();
