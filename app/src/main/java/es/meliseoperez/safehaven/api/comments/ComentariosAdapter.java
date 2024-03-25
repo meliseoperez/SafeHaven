@@ -66,6 +66,8 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
                 @Override
                 public void onClick(View view) {
                     if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION){
+                        Comentario comentario = comentarioList.get(getAdapterPosition());
+                        Log.d("ComentarioClick", "Comentario ID: " + comentario.getId());
                         listener.onComentarioClick(comentarioList.get(getAdapterPosition()));
                     }
                 }
