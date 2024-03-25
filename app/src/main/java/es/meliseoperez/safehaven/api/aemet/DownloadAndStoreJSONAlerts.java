@@ -21,7 +21,7 @@ public class DownloadAndStoreJSONAlerts {
     public void downloadData(MyCallBack myCallback, Context context) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
-            String requestUrl = "http://10.0.2.2:8000/api/alertas";
+            String requestUrl = "http://172.20.10.2:8000/api/alertas";
 
             try {
                 Request request = new Request.Builder()

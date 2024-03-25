@@ -1,6 +1,7 @@
 package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,7 +36,7 @@ public class ConsulataComentariosAPI {
     public void cargaComentarios(Integer idAlert, String tipo) {
         String token = sharedPreferences.getString("token", "");
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:8000/api/v1/comments";
+        String url = "http://172.20.10.2:8000/api/v1/comments";
         if (idAlert != null) {
             url += "/" + idAlert + "?type=" + tipo;
         }
