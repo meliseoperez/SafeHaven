@@ -3,6 +3,7 @@ package es.meliseoperez.safehaven.api.comments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -67,6 +68,7 @@ public class UDCommentActivity extends AppCompatActivity {
         actualizar.setOnClickListener(v-> modificarMensaje(commentId, token));
 
         if (getSupportActionBar() != null) {
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
