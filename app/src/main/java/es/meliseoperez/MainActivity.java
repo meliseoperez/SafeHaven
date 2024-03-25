@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import es.meliseoperez.safehaven.BuildConfig;
 import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
