@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 
 import es.meliseoperez.safehaven.BuildConfig;
 import es.meliseoperez.safehaven.R;
+import es.meliseoperez.safehaven.UsrDataFragment;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 import es.meliseoperez.safehaven.api.aemet.AlertsExtractor;
 import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_usuario:
-
+                launchUserDataFragment();
                 return true;
             case R.id.menu_comentarios:
                 if (acesoPermitido()) {
@@ -331,6 +332,15 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void launchUserDataFragment() {
+        UsrDataFragment userDataFragment = new UsrDataFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, userDataFragment);
+        fragmentTransaction.addToBackStack(null);// Permite regresar al fragmento anterior presionando el botón atrás
+        fragmentTransaction.commit();
+
     }
 
     private void showAboutDialog() {
