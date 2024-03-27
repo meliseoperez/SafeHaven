@@ -13,6 +13,11 @@
         android:title="Comentarios"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/menu_configuracion"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Configuración"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/menu_salir"
         android:icon="@drawable/baseline_disabled_by_default_black_18"
         android:tooltipText="No es necesario introducir email y password para abrir app"
@@ -20,13 +25,14 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_log_out"
-        android:icon="@drawable/baseline_help_black_18"
+        android:icon="@drawable/common_full_open_on_phone"
         android:title="Cerrar Sesión"
         android:tooltipText="Tendrá que ingresar email y password para logearse."
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_acerca_de"
-        android:icon="@drawable/baseline_help_black_18"
+        android:icon="@android:drawable/ic_dialog_info"
         android:title="Acerca de"
         app:showAsAction="ifRoom"/>
+
 </menu>
