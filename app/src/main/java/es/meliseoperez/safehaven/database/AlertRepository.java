@@ -142,6 +142,26 @@ public class AlertRepository implements AutoCloseable{
     }
 
     public SQLiteDatabase getDatabase() {
+        if (database == null || !database.isOpen()) {
+            database = dbHelper.getWritableDatabase();
+        }
         return database;
     }
+
+    public void eliminarAlertaPorId(Integer id) {
+        // Abre la base de datos para escritura
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Define el criterio de selección, que es nuestra cláusula WHERE en SQL
+        // En este caso, estamos buscando una fila con el ID específico
+        String selection = AlertContract.AlertEntry.COLUMN_ID + " = ?";
+
+        // Especifica los argumentos en formato de matriz para el criterio de selección
+        // SQLite trata estos argumentos para prevenir inyecciones SQL
+        String[] selectionArgs = { id.toString() };
+
+        // Realiza la operación de eliminación
+        db.delete(AlertContract.AlertEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
 }
