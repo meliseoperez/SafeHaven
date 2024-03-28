@@ -28,6 +28,16 @@ public class AlertDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
+        // Crear el trigger para eliminar alertas expiradas cada vez que se inserte un nuevo
+        // registro
+        String SQL_CREATE_TRIGGER =
+                "CREATE TRIGGER IF NOT EXISTS delete_expired_alerts " +
+                        "AFTER DELETE ON " + AlertContract.AlertEntry.TABLE_NAME + " " +
+                        "BEGIN " +
+                        "   DELETE FROM " + AlertContract.AlertEntry.TABLE_NAME + " " + // Asegúrate de tener un espacio antes de WHERE
+                        "   WHERE datetime(" + AlertContract.AlertEntry.COLUMN_EXPIRES + ")  < datetime('now', 'localtime'); " +
+                        "END;";
+        db.execSQL(SQL_CREATE_TRIGGER);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
