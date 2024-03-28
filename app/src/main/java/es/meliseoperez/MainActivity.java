@@ -28,6 +28,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -86,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             cleanUpExpiredAlerts();
         } catch (Exception e) {
-            Log.d("ERROR AL LIMPIAR: ", "No se ha podido limpiar registros");
+            String error = e.getMessage();
+            String msg = "No se ha podido limpiar registros " + error;
+            Log.d("ERROR AL LIMPIAR: ", msg);
         }
 
     }
@@ -174,8 +181,9 @@ public class MainActivity extends AppCompatActivity {
         editor.putLong("last_alerts_update", System.currentTimeMillis());
         editor.apply();
     }
-    private void saveUpdatePreferences(String updateFrequency){
-        SharedPreferences sharedPreferences = getSharedPreferences("app_prefs",Context.MODE_PRIVATE);
+
+    private void saveUpdatePreferences(String updateFrequency) {
+        SharedPreferences sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("update_frequency", updateFrequency);//"siempre","cada_hora","cada_seis_horas"
         editor.apply();
@@ -186,9 +194,9 @@ public class MainActivity extends AppCompatActivity {
             //Comprueba si es necesario actualizar basándose en la última marca de tiempo de actualización
             if (shouldUpdateAlerts()) {
                 fetchDataFromApi();
-            }else{
+            } else {
                 //funcionamiento modo offline
-                handler.post(()->Toast.makeText(getApplicationContext(),
+                handler.post(() -> Toast.makeText(getApplicationContext(),
                         "No hay conexión de red disponible. Mostrando datos locales.",
                         Toast.LENGTH_LONG).show());
 
@@ -199,11 +207,11 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean shouldUpdateAlerts() {
         SharedPreferences prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-        String updateFrequency = prefs.getString("update_frequency","cada_hora");
-        long lastUpdate = prefs.getLong("last_alerts_update",0);
+        String updateFrequency = prefs.getString("update_frequency", "cada_hora");
+        long lastUpdate = prefs.getLong("last_alerts_update", 0);
         //Calcula el intervalo de tiempo desde la útlima actualización
         long elapsedTimeSinceLasUpdate = System.currentTimeMillis() - lastUpdate;
-        switch (updateFrequency){
+        switch (updateFrequency) {
             case "siempre":
                 return true;//Siempre actualizada
             case "cada_hora":
@@ -283,14 +291,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void cleanUpExpiredAlerts() {
-        // Definir la consulta SQL para eliminar alertas expiradas
-        String SQL_DELETE_EXPIRED_ALERTS = "DELETE FROM " + AlertContract.AlertEntry.TABLE_NAME +
-                " WHERE datetime(" + AlertContract.AlertEntry.COLUMN_EXPIRES + ") < datetime('now', 'localtime')";
-        try (AlertRepository alertRepository = new AlertRepository(getApplicationContext())) {
-            alertRepository.getDatabase().execSQL(SQL_DELETE_EXPIRED_ALERTS);
+    private List<Integer> getIdAlertasExpiradas() {
+        List<Integer> idsExpiradas = new ArrayList<>();
+        List<AlertInfo> todasLasAlertas = alertRepository.getAllAlerts();
+        Instant ahora = Instant.now();
 
+        for (AlertInfo alerta : todasLasAlertas) {
+            Instant fechaExpiracion = ZonedDateTime.parse(alerta.expires).toInstant();
+            if (fechaExpiracion.isBefore(ahora)) {
+                idsExpiradas.add(alerta.id);
+            }
         }
+
+        return idsExpiradas;
+    }
+
+    private void eliminarAlertasExpiradas() {
+        List<Integer> idsExpiradas = getIdAlertasExpiradas();
+        try (AlertRepository alertRepository = new AlertRepository(getApplicationContext())) {
+            alertRepository.open();
+            for (Integer id : idsExpiradas) {
+                alertRepository.eliminarAlertaPorId(id);
+            }
+        }
+    }
+
+    private void cleanUpExpiredAlerts() {
+        eliminarAlertasExpiradas();
     }
 
 
@@ -351,16 +378,16 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.about_title))
-                .setMessage(appName +"\n" + versionText + "\n"+
+                .setMessage(appName + "\n" + versionText + "\n" +
                         "Desarrollo por: " + developerName)
                 .setPositiveButton("OK", null)
                 .show();
 
     }
 
-    public void showUpTimeFrecuencyDialog(){
+    public void showUpTimeFrecuencyDialog() {
         //Las opciones de frecuencia de actualización
-        final String[] items ={"Siempre","Cada hora","Cada 6 horas"};
+        final String[] items = {"Siempre", "Cada hora", "Cada 6 horas"};
         int checkedItem = getCurrentSelection(); // // Cambia esto segúan la selección actual guardda en SharedPreferences
         //No enteindo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -376,10 +403,11 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private  int getCurrentSelection(){
+
+    private int getCurrentSelection() {
         SharedPreferences pref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-        String currentFrequency = pref.getString("update_frequency","Cada_hora");
-        switch (currentFrequency){
+        String currentFrequency = pref.getString("update_frequency", "Cada_hora");
+        switch (currentFrequency) {
             case "Siempre":
                 return 0;
             case "Cada_hora":
@@ -391,6 +419,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     public void menu_log_out() {
         //Obtener el SharedPreferencees
         SharedPreferences sharedPreferences = getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);

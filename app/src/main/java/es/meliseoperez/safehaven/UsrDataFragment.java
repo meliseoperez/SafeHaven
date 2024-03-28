@@ -35,7 +35,7 @@ import okhttp3.Response;
 public class UsrDataFragment extends Fragment {
     private EditText editTextUserName, editTextUserEmail, editTextUserPassword;
     private RadioGroup radioGroupUserType;
-    private Button buttonSaveUserData;
+    private Button buttonSaveUserData, buttonCancelUserData;
     private String  typeUser;
 
     @Override
@@ -58,7 +58,13 @@ public class UsrDataFragment extends Fragment {
         buttonSaveUserData.setOnClickListener(v->{
             updateUserData();
         });
+
+        buttonCancelUserData  = view.findViewById(R.id.btnCancel);
+        buttonCancelUserData.setOnClickListener(V->{
+            getActivity().getSupportFragmentManager().popBackStack();
+        });
         return view;
+
     }
 
     private void getUserData() {
