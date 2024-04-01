@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
-        String url="http://172.20.10.2:8000/api/login";
+        String url="http://" + MainActivity.serverIP + ":8000/api/login";
 
         JSONObject jsonObject = new JSONObject();
         try{
