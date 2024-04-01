@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.meliseoperez.MainActivity;
 import es.meliseoperez.safehaven.R;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -64,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void sendRegistrationRequest(String name, String email, String password, String typeUser) {
-        String url = "http://172.20.10.2:8000/api/register";
+        String url = "http://" + MainActivity.serverIP + "/api/register";
         StringRequest request = new StringRequest(
                 Request.Method.POST,
                 url,

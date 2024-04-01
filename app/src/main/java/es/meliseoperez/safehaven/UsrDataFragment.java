@@ -4,25 +4,25 @@ package es.meliseoperez.safehaven;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import es.meliseoperez.MainActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -74,7 +74,7 @@ public class UsrDataFragment extends Fragment {
         String token = prefs.getString("token","");
 
         OkHttpClient client = new OkHttpClient();
-        String url = "http://172.20.10.2:8000/api/v1/showUserData/"+ idUser;
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/showUserData/"+ idUser;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -143,7 +143,7 @@ public class UsrDataFragment extends Fragment {
         String token = prefs.getString("token","");
 
         OkHttpClient client = new OkHttpClient();
-        String url = "http://172.20.10.2:8000/api/v1/user/" + idUser;
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/user/" + idUser;
 
         EditText editTextUserName = getView().findViewById(R.id.editTextUserName);
         EditText editTextUserEmail = getView().findViewById(R.id.editTextUserEmail);
@@ -174,6 +174,7 @@ public class UsrDataFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario", Toast.LENGTH_LONG).show());
+                Log.e("ERROR DATOS USER", e.toString());
             }
 
             @Override
@@ -183,6 +184,7 @@ public class UsrDataFragment extends Fragment {
                     // Actualizar UI o realizar alguna acción después de la actualización
                 } else {
                     getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario", Toast.LENGTH_LONG).show());
+                    Log.e("respuesta correcta ERROR DATOS USER", String.valueOf(response.code()));
                 }
             }
         });
