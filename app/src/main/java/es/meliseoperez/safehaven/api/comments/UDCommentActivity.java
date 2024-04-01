@@ -3,7 +3,6 @@ package es.meliseoperez.safehaven.api.comments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import es.meliseoperez.MainActivity;
 import es.meliseoperez.safehaven.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -73,7 +73,7 @@ public class UDCommentActivity extends AppCompatActivity {
         }
     }
     private void cargarComentario(int commentId, String token){
-       String url = "http://172.20.10.2:8000/api/v1/comments/"+commentId +"?type=idComent";
+       String url = "http://1" + MainActivity.serverIP + ":8000/api/v1/comments/"+commentId +"?type=idComent";
        Request request = new Request.Builder()
                .url(url)
                .addHeader("Authorization", "Bearer " + token)
@@ -101,7 +101,7 @@ public class UDCommentActivity extends AppCompatActivity {
        });
     }
     private void eliminarMensaje(int commentId, String token){
-        String url = "http://172.20.10.2:8000/api/v1/comments/"+commentId;
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/comments/"+commentId;
         Request request = new Request.Builder()
                 .url(url)
                 .delete()
@@ -129,7 +129,7 @@ public class UDCommentActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"El comentario está vacío.",Toast.LENGTH_LONG).show();
             return;
         }
-        String url = "http://172.20.10.2:8000/api/v1/comments/"+commentId;
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/comments/"+commentId;
 
         JSONObject comentarioJson = new JSONObject();
         try{
