@@ -2,17 +2,19 @@ package es.meliseoperez.safehaven.api.aemet;
 
 import android.content.Context;
 import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+
+import es.meliseoperez.MainActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class DownloadAndStoreJSONAlerts {
 
@@ -21,8 +23,7 @@ public class DownloadAndStoreJSONAlerts {
     public void downloadData(MyCallBack myCallback, Context context) {
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
-            String requestUrl = "http://172.20.10.2:8000/api/alertas";
-
+            String requestUrl = "http://" + MainActivity.serverIP + ":8000/api/alertas";
             try {
                 Request request = new Request.Builder()
                         .url(requestUrl)

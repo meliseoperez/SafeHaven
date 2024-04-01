@@ -1,7 +1,6 @@
 package es.meliseoperez.safehaven.api.comments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.meliseoperez.MainActivity;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,16 +27,18 @@ public class ConsulataComentariosAPI {
     private final SharedPreferences sharedPreferences;
     private final ComentariosAdapter comentariosAdapter;
 
+
     public ConsulataComentariosAPI(Context context, ComentariosAdapter comentariosAdapter) {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
         this.comentariosAdapter = comentariosAdapter;
+
     }
 
     public void cargaComentarios(Integer idAlert, String tipo) {
         String token = sharedPreferences.getString("token", "");
         OkHttpClient client = new OkHttpClient();
-        String url = "http://172.20.10.2:8000/api/v1/comments";
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/comments";
         if (idAlert != null) {
             url += "/" + idAlert + "?type=" + tipo;
         }

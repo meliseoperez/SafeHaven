@@ -29,16 +29,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.meliseoperez.safehaven.BuildConfig;
+import es.meliseoperez.safehaven.ConfigUtils;
 import es.meliseoperez.safehaven.R;
 import es.meliseoperez.safehaven.UsrDataFragment;
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
@@ -60,13 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private List<AlertInfo> listaAlertas;
     private Integer id;
     private String tipo;
+    public static String serverIP;
 
     private static final int LOCATION_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        serverIP = ConfigUtils.getServerIp(getApplicationContext());
         tipo = "";
         id = null;
 
