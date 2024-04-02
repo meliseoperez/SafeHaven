@@ -71,7 +71,7 @@
             android:id="@+id/editTextUserPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contraseña (dejar en blanco para no cambiar)"
+            android:hint="Contraseña"
             android:inputType="textPassword"
             android:padding="16dp"
             android:textColor="@android:color/black" />
