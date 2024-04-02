@@ -73,7 +73,7 @@ public class UDCommentActivity extends AppCompatActivity {
         }
     }
     private void cargarComentario(int commentId, String token){
-       String url = "http://1" + MainActivity.serverIP + ":8000/api/v1/comments/"+commentId +"?type=idComent";
+       String url = "http://" + MainActivity.serverIP + ":8000/api/v1/comments/"+commentId +"?type=idComent";
        Request request = new Request.Builder()
                .url(url)
                .addHeader("Authorization", "Bearer " + token)
@@ -81,7 +81,9 @@ public class UDCommentActivity extends AppCompatActivity {
        okHttpClient.newCall(request).enqueue(new Callback() {
            @Override
            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-               Toast.makeText(getApplicationContext(),"error en carga comentario antiguo.",Toast.LENGTH_LONG).show();;
+               runOnUiThread(() ->
+                       Toast.makeText(getApplicationContext(),"error en carga comentario antiguo.",Toast.LENGTH_LONG).show()
+                       );
            }
 
            @Override
