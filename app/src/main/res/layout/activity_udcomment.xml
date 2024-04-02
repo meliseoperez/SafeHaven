@@ -8,25 +8,17 @@
     android:padding="16dp"
     tools:context=".api.comments.UDCommentActivity">
 
-    <!-- Guideline para ayudar en la distribución de los elementos -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
-
     <!-- TextView para mostrar el comentario existente -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewComent"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <TextView
             android:id="@+id/idComent"
@@ -38,53 +30,62 @@
             android:gravity="center_vertical" />
     </androidx.cardview.widget.CardView>
 
-    <!-- EditText para editar el comentario -->
+    <!-- EditText para editar el comentario, con dimensiones aumentadas -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewEditarComent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_height="0dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewComent"
+        app:layout_constraintBottom_toTopOf="@+id/btnModificarComentario"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewComent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp">
 
         <EditText
             android:id="@+id/etnuevoComentario"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp"
             android:hint="Actualizar comentario"
             android:textSize="18sp"
             android:inputType="textMultiLine"
-            android:gravity="center_vertical"/>
+            android:gravity="top|start"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botón para modificar el comentario -->
+    <!-- Botón para modificar el comentario, ajustado para posicionamiento -->
     <Button
         android:id="@+id/btnModificarComentario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="Modificar"
         android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@id/guidelineVertical"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewEditarComent"
-        android:textColor="@android:color/white" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnElinarComentario"
+        app:layout_constraintHorizontal_weight="1"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"/>
 
-    <!-- Botón para eliminar el comentario -->
+    <!-- Botón para eliminar el comentario, ajustado para posicionamiento -->
     <Button
         android:id="@+id/btnElinarComentario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="Eliminar"
         android:backgroundTint="@color/colorPrimaryDark"
-        app:layout_constraintStart_toEndOf="@id/guidelineVertical"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewEditarComent"
-        android:textColor="@android:color/white" />
+        app:layout_constraintStart_toEndOf="@+id/btnModificarComentario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
