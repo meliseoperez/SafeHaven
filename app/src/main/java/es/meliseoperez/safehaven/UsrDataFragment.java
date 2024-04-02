@@ -183,7 +183,7 @@ public class UsrDataFragment extends Fragment {
                     getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Datos del usuario actualizados correctamente", Toast.LENGTH_LONG).show());
                     // Actualizar UI o realizar alguna acción después de la actualización
                 } else {
-                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario", Toast.LENGTH_LONG).show());
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario++", Toast.LENGTH_LONG).show());
                     Log.e("respuesta correcta ERROR DATOS USER", String.valueOf(response.code()));
                 }
             }
