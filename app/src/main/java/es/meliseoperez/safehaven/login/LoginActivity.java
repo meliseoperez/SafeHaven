@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import es.meliseoperez.MainActivity;
+import es.meliseoperez.safehaven.ConfigUtils;
 import es.meliseoperez.safehaven.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,12 +31,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
     private static final String TAG = "LoginActivity";
+    public static String serverIP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        serverIP = ConfigUtils.getServerIp(getApplicationContext());
 
         emailEditText = findViewById(R.id.etEmail);
         passwordEditText = findViewById(R.id.etPassword);
@@ -77,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
-        String url="http://" + MainActivity.serverIP + ":8000/api/login";
+        String url="http://" + serverIP + ":8000/api/login";
 
         JSONObject jsonObject = new JSONObject();
         try{
