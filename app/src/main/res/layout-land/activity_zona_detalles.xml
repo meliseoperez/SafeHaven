@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".api.comments.ZonaDetallesActivity">
+
+    <ImageView
+        android:id="@+id/imageViewIcon"
+        android:layout_width="159dp"
+        android:layout_height="117dp"
+        android:src="@mipmap/icon_xxhdpi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.282" />
+
+    <TextView
+        android:id="@+id/texVistaDescripcion"
+        android:layout_width="619dp"
+        android:layout_height="105dp"
+        android:layout_marginStart="16dp"
+        android:padding="16dp"
+        android:text="Descripción"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/texVistaInstrucciones"
+        android:layout_width="619dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:text="Instrucción"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+        app:layout_constraintTop_toBottomOf="@+id/texVistaDescripcion"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/crearComentario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:text="Crear Comentario"
+        app:layout_constraintEnd_toStartOf="@+id/verComentario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texVistaInstrucciones" />
+
+    <Button
+        android:id="@+id/verComentario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ver Comentarios"
+        app:layout_constraintStart_toEndOf="@+id/crearComentario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/crearComentario"
+        app:layout_constraintBottom_toBottomOf="@+id/crearComentario"
+        android:layout_marginStart="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

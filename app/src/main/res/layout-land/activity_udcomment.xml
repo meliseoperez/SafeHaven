@@ -10,95 +10,52 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="81dp"
-        android:layout_height="90dp"
+        android:layout_width="126dp"
+        android:layout_height="104dp"
         android:src="@mipmap/icon_xxhdpi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHorizontal"
+    <EditText
+        android:id="@+id/etnuevoComentario"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="120dp"
+        android:padding="16dp"
+        android:hint="Actualizar comentario"
+        android:textSize="18sp"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewLogo"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewLogo" />
+
+    <Button
+        android:id="@+id/btnModificarComentario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Modificar"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/btnElinarComentario"
+        app:layout_constraintStart_toStartOf="@+id/etnuevoComentario"
+        app:layout_constraintTop_toBottomOf="@+id/etnuevoComentario" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVertical"
+    <Button
+        android:id="@+id/btnElinarComentario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewComent"
-        android:layout_width="1067dp"
-        android:layout_height="109dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toStartOf="@id/guidelineVertical"
-        app:layout_constraintHorizontal_bias="0.458"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal">
-
-        <EditText
-            android:id="@+id/etnuevoComentario"
-            android:layout_width="750dp"
-            android:layout_height="91dp"
-            android:hint="Nuevo comentario"
-            android:inputType="textMultiLine"
-            android:padding="16dp"
-            android:textSize="18sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewEditarComent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guidelineVertical"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal"/>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutButtons"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewComent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="16dp">
-
-        <Button
-            android:id="@+id/btnModificarComentario"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="Modificar"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:layout_marginEnd="8dp"/>
-
-        <Button
-            android:id="@+id/btnElinarComentario"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:text="Eliminar"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="Eliminar"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/etnuevoComentario"
+        app:layout_constraintStart_toEndOf="@+id/btnModificarComentario"
+        app:layout_constraintTop_toBottomOf="@+id/etnuevoComentario"
+        app:layout_constraintWidth_default="wrap" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

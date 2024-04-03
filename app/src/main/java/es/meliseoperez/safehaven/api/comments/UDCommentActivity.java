@@ -54,7 +54,6 @@ public class UDCommentActivity extends AppCompatActivity {
         String token = sharedPreferences.getString("token", "");
         okHttpClient = new OkHttpClient();
 
-        textView = findViewById(R.id.idComent);
         actualizar = findViewById(R.id.btnModificarComentario);
         eliminar = findViewById(R.id.btnElinarComentario);
 
