@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONException;
@@ -37,10 +40,19 @@ public class UsrDataFragment extends Fragment {
     private RadioGroup radioGroupUserType;
     private Button buttonSaveUserData, buttonCancelUserData;
     private String  typeUser;
-
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_user_data, container, false);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         editTextUserName = view.findViewById(R.id.editTextUserName);
         editTextUserEmail = view.findViewById(R.id.editTextUserEmail);
@@ -64,6 +76,7 @@ public class UsrDataFragment extends Fragment {
             getActivity().getSupportFragmentManager().popBackStack();
         });
         return view;
+
 
     }
 
@@ -195,4 +208,12 @@ public class UsrDataFragment extends Fragment {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            getActivity().onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
