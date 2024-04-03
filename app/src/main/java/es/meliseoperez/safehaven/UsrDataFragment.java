@@ -150,20 +150,24 @@ public class UsrDataFragment extends Fragment {
         EditText editTextUserPassword = getView().findViewById(R.id.editTextUserPassword);
         RadioButton rbBasic = getView().findViewById(R.id.rbBasic);
         String typeUser = rbBasic.isChecked() ? "Básico" : "Avanzado";
+        String nuevo_nombre=editTextUserName.getText().toString();
 
-        // Creando el cuerpo de la solicitud
-        FormBody.Builder formBuilder = new FormBody.Builder()
-                .add("name", editTextUserName.getText().toString())
-                .add("email", editTextUserEmail.getText().toString())
-                .add("type_user", typeUser);
 
-        // Añadir la contraseña solo si el campo no está vacío
+        FormBody.Builder formBuilder = new FormBody.Builder();
+
+        // Agregar los campos a la solicitud solo si no están vacíos
+        if (!editTextUserName.getText().toString().isEmpty()) {
+            formBuilder.add("name", editTextUserName.getText().toString());
+        }
+        if (!editTextUserEmail.getText().toString().isEmpty()) {
+            formBuilder.add("email", editTextUserEmail.getText().toString());
+        }
         if (!editTextUserPassword.getText().toString().isEmpty()) {
             formBuilder.add("password", editTextUserPassword.getText().toString());
         }
+        formBuilder.add("type_user", typeUser);
 
         RequestBody formBody = formBuilder.build();
-
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + token)
@@ -183,8 +187,9 @@ public class UsrDataFragment extends Fragment {
                     getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Datos del usuario actualizados correctamente", Toast.LENGTH_LONG).show());
                     // Actualizar UI o realizar alguna acción después de la actualización
                 } else {
-                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario++", Toast.LENGTH_LONG).show());
-                    Log.e("respuesta correcta ERROR DATOS USER", String.valueOf(response.code()));
+                    String codigoSalida= response.body().string();
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), codigoSalida, Toast.LENGTH_LONG).show());
+                    Log.e("respuesta correcta ERROR DATOS USER", response.message());
                 }
             }
         });
