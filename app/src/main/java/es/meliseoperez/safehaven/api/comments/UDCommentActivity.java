@@ -54,7 +54,6 @@ public class UDCommentActivity extends AppCompatActivity {
         String token = sharedPreferences.getString("token", "");
         okHttpClient = new OkHttpClient();
 
-        textView = findViewById(R.id.idComent);
         actualizar = findViewById(R.id.btnModificarComentario);
         eliminar = findViewById(R.id.btnElinarComentario);
 
@@ -94,7 +93,7 @@ public class UDCommentActivity extends AppCompatActivity {
                    Comentario comentario = gson.fromJson(responseData, ComentariosResponse.class).getData().get(0);
                    comentarioUnico = comentario.getCommentText();
                    runOnUiThread(()->{
-                       textView.setText(comentarioUnico);
+                       etnuevoComentario.setText(comentarioUnico);
                    });
                } else {
                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error al cargar el comentario.", Toast.LENGTH_LONG).show());

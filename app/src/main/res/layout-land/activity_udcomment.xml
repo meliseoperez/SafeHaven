@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F6FF"
+    android:padding="16dp"
+    tools:context=".api.comments.UDCommentActivity">
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="126dp"
+        android:layout_height="104dp"
+        android:src="@mipmap/icon_xxhdpi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <EditText
+        android:id="@+id/etnuevoComentario"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="120dp"
+        android:padding="16dp"
+        android:hint="Actualizar comentario"
+        android:textSize="18sp"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewLogo"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewLogo" />
+
+    <Button
+        android:id="@+id/btnModificarComentario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="Modificar"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/btnElinarComentario"
+        app:layout_constraintStart_toStartOf="@+id/etnuevoComentario"
+        app:layout_constraintTop_toBottomOf="@+id/etnuevoComentario" />
+
+    <Button
+        android:id="@+id/btnElinarComentario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="Eliminar"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/etnuevoComentario"
+        app:layout_constraintStart_toEndOf="@+id/btnModificarComentario"
+        app:layout_constraintTop_toBottomOf="@+id/etnuevoComentario"
+        app:layout_constraintWidth_default="wrap" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
