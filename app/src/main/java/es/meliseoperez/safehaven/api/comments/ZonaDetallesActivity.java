@@ -37,7 +37,7 @@ public class ZonaDetallesActivity extends AppCompatActivity {
         indicaciones = getIntent().getStringExtra("ZONA_INSTRUCCIONES");
 
         textDescripcion = findViewById(R.id.texVistaDescripcion);
-        textIndicaciones = findViewById(R.id.texVistaIntrucciones);
+        textIndicaciones = findViewById(R.id.texVistaInstrucciones);
         try{
             textDescripcion.setText(descripcion);
             textIndicaciones.setText(indicaciones);

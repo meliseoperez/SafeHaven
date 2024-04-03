@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:id="@+id/texVistaIntrucciones"
+            android:id="@+id/texVistaInstrucciones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
