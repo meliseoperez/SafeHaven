@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +32,6 @@ import okhttp3.Response;
 public class UDCommentActivity extends AppCompatActivity {
     private Button actualizar;
     private Button eliminar;
-    private TextView textView;
     private EditText etnuevoComentario;
     private String comentarioUnico;
     private String nuevoComentario;
