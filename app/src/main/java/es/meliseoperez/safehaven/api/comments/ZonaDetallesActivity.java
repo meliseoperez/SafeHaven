@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,9 +38,12 @@ public class ZonaDetallesActivity extends AppCompatActivity {
 
         textDescripcion = findViewById(R.id.texVistaDescripcion);
         textIndicaciones = findViewById(R.id.texVistaIntrucciones);
-
-        textDescripcion.setText(descripcion);
-        textIndicaciones.setText(indicaciones);
+        try{
+            textDescripcion.setText(descripcion);
+            textIndicaciones.setText(indicaciones);
+        } catch (Exception e) {
+           Log.e("Error en setText", e.getMessage());
+        }
 
 
         //Inicializar los botones y establecer los onClickListener
