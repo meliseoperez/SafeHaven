@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     android:background="#F2F6FF"
     android:padding="16dp"
-    tools:context=".api.comments.ComentariosActivity">
+    tools:context=".api.comments.UDCommentActivity">
 
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="81dp"
         android:layout_height="90dp"
         android:src="@mipmap/icon_xxhdpi"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,15 +33,38 @@
         app:layout_constraintGuide_percent="0.50" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewEmail"
+        android:id="@+id/cardViewComent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toStartOf="@id/guidelineVertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal"
-        android:layout_marginEnd="8dp">
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal">
+
+        <EditText
+            android:id="@+id/etnuevoComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nuevo comentario"
+            android:inputType="textMultiLine"
+            android:padding="16dp"
+            android:textSize="18sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewEditarComent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guidelineVertical"
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal">
 
         <EditText
             android:id="@+id/etEmail"
@@ -53,59 +76,38 @@
             android:textColor="@android:color/black" />
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewPassword"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guidelineVertical"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal"
-        android:layout_marginStart="8dp">
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@android:color/black" />
-    </androidx.cardview.widget.CardView>
-
     <LinearLayout
+        android:id="@+id/linearLayoutButtons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewEmail"
-
+        app:layout_constraintTop_toBottomOf="@+id/cardViewComent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="16dp">
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnModificarComentario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/colorPrimary"
-            android:padding="12dp"
-            android:text="Iniciar sesión"
+            android:text="Modificar"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:layout_marginEnd="8dp"/>
 
         <Button
-            android:id="@+id/btnRegister"
+            android:id="@+id/btnElinarComentario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
-            android:padding="12dp"
-            android:text="Registro"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="Eliminar"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
