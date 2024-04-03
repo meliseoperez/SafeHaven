@@ -20,37 +20,42 @@
         tools:targetApi="33">
         <activity
             android:name=".api.comments.UDCommentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".api.comments.ZonaDetallesActivity"
-            android:exported="false" /> <!-- SplashScreenActivity configurada como la actividad de inicio -->
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".login.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
         <activity
             android:name="es.meliseoperez.MainActivity"
-            android:exported="true">
-
-            <!-- No necesitas un intent-filter con MAIN y LAUNCHER a menos que esta sea la entrada principal de tu aplicación -->
+            android:exported="true"
+            android:launchMode="singleTop">
         </activity>
         <activity
             android:name=".login.RegisterActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
         <activity
             android:name=".api.comments.ComentariosActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
         <activity
             android:name=".api.comments.AddCommentActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
