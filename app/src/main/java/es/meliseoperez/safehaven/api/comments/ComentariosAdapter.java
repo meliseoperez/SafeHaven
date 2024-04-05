@@ -26,6 +26,10 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
         this.listener = listener;
     }
 
+    public ComentariosAdapter(List<Comentario> comentarios) {
+        this.comentarioList = comentarios;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

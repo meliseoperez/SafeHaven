@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -114,7 +115,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMapReady() {
                 // Cuando el mapa esté listo, carga las zonas en él.
-                processAlertsAndDisplayOnMap();
+                try {
+                    processAlertsAndDisplayOnMap();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -199,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
                         "No hay conexión de red disponible. Mostrando datos locales.",
                         Toast.LENGTH_LONG).show());
 
-                processAlertsAndDisplayOnMap();
+                try {
+                    processAlertsAndDisplayOnMap();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -257,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void processAlertsAndDisplayOnMap() {
+    private void processAlertsAndDisplayOnMap() throws IOException {
         AlertsExtractor alertsExtractor = new AlertsExtractor(MainActivity.this, "alertas2.json");
         listaAlertas = alertsExtractor.extractAlertsInfo();
         Log.e(TAG, "numero de alertas: " + listaAlertas.size());
