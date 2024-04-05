@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android' version '1.8.10'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 // Añadir esto justo después de tus plugins
@@ -40,21 +41,37 @@ android {
 }
 
 dependencies {
-    // Retrofit
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    implementation 'androidx.test:core:1.5.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0' // Asegúrate de usar la última versión
+    // Kotlin - Usa solo una versión aquí, asegúrate de que sea consistente
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
+    // Retrofit y OkHttp
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    // AndroidX y Material Design
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Google Play Services
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // Otros
     implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+
+    // Testing
     testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'org.mockito:mockito-android:4.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
 }

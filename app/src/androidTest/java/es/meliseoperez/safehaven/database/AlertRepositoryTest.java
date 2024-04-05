@@ -1,4 +1,4 @@
-package es.meliseoperez.safehaven;
+package es.meliseoperez.safehaven.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,8 +19,6 @@ import org.junit.Test;
 import java.util.List;
 
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
-import es.meliseoperez.safehaven.database.AlertContract;
-import es.meliseoperez.safehaven.database.AlertRepository;
 
 public class AlertRepositoryTest {
 
@@ -82,7 +80,7 @@ public class AlertRepositoryTest {
     @Test
     public void testGetAlertById() {
         // Caso de prueba para verificar la recuperación de una alerta por su ID
-        int testId = 391; // Este ID debería corresponder a una alerta existente en la base de datos de prueba
+        int testId = 596; // Este ID debería corresponder a una alerta existente en la base de datos de prueba
         AlertInfo alert = alertRepository.getAlertById(testId);
         assertNotNull("La alerta recuperada no debería ser nula", alert);
         assertEquals("El ID de la alerta recuperada debería coincidir con el solicitado", testId, alert.id);
