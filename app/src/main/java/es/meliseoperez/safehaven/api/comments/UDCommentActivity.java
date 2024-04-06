@@ -116,6 +116,11 @@ public class UDCommentActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     runOnUiThread(() ->Toast.makeText(getApplicationContext(),"Comentario ELIMINADO.",Toast.LENGTH_LONG).show());
+                    Intent intent = new Intent(UDCommentActivity.this, ComentariosActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+
                 } else {
                     runOnUiThread(() ->Toast.makeText(getApplicationContext(),"error al ELIMINAR comentario .",Toast.LENGTH_LONG).show());
                 }
@@ -154,6 +159,9 @@ public class UDCommentActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), "El comentario ha sido modificado.", Toast.LENGTH_LONG).show());
+                    Intent intent = new Intent(UDCommentActivity.this, ComentariosActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 } else {
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error al actualizar el comentario.", Toast.LENGTH_LONG).show());
