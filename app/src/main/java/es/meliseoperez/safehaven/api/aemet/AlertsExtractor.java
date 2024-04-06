@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -20,23 +21,29 @@ public class AlertsExtractor {
 
     private static final String TAG = "AlertsExtractor";
     private Context context;
-    private final String fileXML;
+    private final String fileToRead;
     private String jsonContenido;
-
+    private FileReader fileReader;
+    public AlertsExtractor(Context context, String fileToRead, FileReader fileReader) {
+        this.context = context;
+        this.fileToRead = fileToRead;
+        this.fileReader = fileReader;
+    }
     public AlertsExtractor(Context context, String fileXML) {
         this.context = context;
-        this.fileXML = fileXML;
+        this.fileToRead = fileXML;
     }
 
-    public List<AlertInfo> extractAlertsInfo() {
+    public List<AlertInfo> extractAlertsInfo() throws IOException {
         List<AlertInfo> alerts = new ArrayList<>();
 
         File contentFile = new File(context.getFilesDir(), "alertas2.json");
 
         try {
             jsonContenido = new String(Files.readAllBytes(Paths.get(contentFile.getPath())), StandardCharsets.UTF_8);
-            Log.i(TAG, "Contenido JSON: " + jsonContenido);
-
+            if (jsonContenido.trim().isEmpty()) {
+                return new ArrayList<>();
+            }
             Gson gson = new Gson();
             Type listType = new TypeToken<AlertResponse>() {}.getType();
             AlertResponse alertResponse = gson.fromJson(jsonContenido, listType);
@@ -48,6 +55,7 @@ public class AlertsExtractor {
 
         } catch (IOException e) {
             Log.e(TAG, "Error al leer el archivo: " + e.getMessage());
+            throw e;
         }
 
         return alerts;
@@ -56,7 +64,7 @@ public class AlertsExtractor {
     // Otros métodos (getTagValue, displayAlerts) permanecen sin cambios
     public class AlertResponse {
         @SerializedName("data")
-        private List<AlertInfo> data;
+        private List<AlertInfo> data= new ArrayList<>();
 
         public List<AlertInfo> getData() {
             return data;

@@ -76,9 +76,8 @@ public class AlertRepository implements AutoCloseable{
         if (columnIndex != -1) {
             return cursor.getString(columnIndex);
         } else {
-            // Puedes decidir manejarlo como quieras: lanzar una excepción, loguear un error, etc.
             Log.e(TAG, "Columna no encontrada: " + columnName);
-            return null;  // o cualquier valor predeterminado que quieras establecer
+            return null;
         }
     }
     // Convierte un registro de Cursor a un objeto AlertInfo
@@ -100,36 +99,30 @@ public class AlertRepository implements AutoCloseable{
 
     public AlertInfo getAlertById(int alertID) {
         AlertInfo alert = null;
-        Cursor cursor = null;
 
-        // Asegúrate de que 'database' esté inicializado
-        if (database != null) {
-            try {
-                String seleccion = AlertContract.AlertEntry.COLUMN_ID + " = ?";
-                String[] selectionArgs = {String.valueOf(alertID)};
+        // Asegurarse de que el ID es válido y la base de datos está abierta y lista
+        if (alertID < 0 || database != null || !database.isOpen()) {
 
-                cursor = database.query(
-                        AlertContract.AlertEntry.TABLE_NAME,
-                        null,
-                        seleccion,
-                        selectionArgs,
-                        null,
-                        null,
-                        null
-                );
+            String seleccion = AlertContract.AlertEntry.COLUMN_ID + " = ?";
+            String[] selectionArgs = {String.valueOf(alertID)};
 
-                if (cursor.moveToFirst()) {
+            try(Cursor cursor = database.query(
+                    AlertContract.AlertEntry.TABLE_NAME,
+                    null,
+                    seleccion,
+                    selectionArgs,
+                    null,
+                    null,
+                    null)){
+                if(cursor != null && cursor.moveToFirst()){
                     alert = cursorToAlert(cursor);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "Error al buscar la alerta por ID", e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
+            } catch (SQLException e) {
+                Log.e(TAG, "Error al buscar la alerta por ID" + alertID, e);
             }
         } else {
-            Log.e(TAG, "Database is null, cannot query");
+            Log.e(TAG, "Parámetro inválido o base de datos no disponible.");
+            return null;
         }
         return alert;
     }

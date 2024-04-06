@@ -37,6 +37,9 @@ public class Comentario {
         this.id = id;
     }
 
+    public Comentario(String s, String s1) {
+    }
+
 
     public String getCommentText() {
         return commentText;
