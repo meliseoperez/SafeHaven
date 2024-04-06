@@ -1,4 +1,4 @@
-package es.meliseoperez.safehaven;
+package es.meliseoperez.safehaven.api.aemet;
 
 import static org.junit.Assert.assertTrue;
 

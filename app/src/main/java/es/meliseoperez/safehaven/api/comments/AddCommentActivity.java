@@ -40,7 +40,9 @@ public class AddCommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_comment);
+
         alertID = getIntent().getIntExtra("ZONA_ID", 0);
+
         editTextComment = findViewById(R.id.editTextComment);
         buttonSubmit = findViewById(R.id.buttonSubmit);
 
@@ -70,6 +72,7 @@ public class AddCommentActivity extends AppCompatActivity {
         comment = editTextComment.getText().toString().trim();
         if (!comment.isEmpty()) {
             storeApi();
+            finish();
         } else {
             Toast.makeText(this, "El comentario no puede estar vacío.", Toast.LENGTH_SHORT).show();
         }
