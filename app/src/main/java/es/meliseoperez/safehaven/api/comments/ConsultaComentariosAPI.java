@@ -21,14 +21,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ConsulataComentariosAPI {
+public class ConsultaComentariosAPI {
 
     private final Context context;
     private final SharedPreferences sharedPreferences;
     private final ComentariosAdapter comentariosAdapter;
 
 
-    public ConsulataComentariosAPI(Context context, ComentariosAdapter comentariosAdapter) {
+    public ConsultaComentariosAPI(Context context, ComentariosAdapter comentariosAdapter) {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
         this.comentariosAdapter = comentariosAdapter;
