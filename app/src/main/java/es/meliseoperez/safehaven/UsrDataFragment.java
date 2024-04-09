@@ -1,6 +1,5 @@
 package es.meliseoperez.safehaven;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,141 +33,138 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * Fragmento para gestionar la visualización y actualización de datos de usuario.
+ * Permite a los usuarios modificar su información personal como nombre, email, contraseña y tipo de usuario.
+ */
 public class UsrDataFragment extends Fragment {
+    // Variables para los componentes de la UI
     private EditText editTextUserName, editTextUserEmail, editTextUserPassword;
     private RadioGroup radioGroupUserType;
     private Button buttonSaveUserData, buttonCancelUserData;
-    private String  typeUser;
+    private String typeUser;
+
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Habilita que este fragmento pueda tener un menú de opciones propio.
         setHasOptionsMenu(true);
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Infla el layout para este fragmento
         View view = inflater.inflate(R.layout.fragment_user_data, container, false);
+
+        // Configura la ActionBar
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
+        // Inicializa los componentes de la UI y establece listeners
+        initializeComponents(view);
+        getUserData();
+
+        return view;
+    }
+
+    /**
+     * Inicializa los componentes de la vista y configura los listeners para los botones y el RadioGroup.
+     */
+    private void initializeComponents(View view) {
         editTextUserName = view.findViewById(R.id.editTextUserName);
         editTextUserEmail = view.findViewById(R.id.editTextUserEmail);
         editTextUserPassword = view.findViewById(R.id.editTextUserPassword);
 
         radioGroupUserType = view.findViewById(R.id.fragment_rgTypeUser);
-        radioGroupUserType.setOnCheckedChangeListener((group,checkedId) -> {
-            RadioButton selectedRadioButton = view.findViewById(checkedId);
-            typeUser = selectedRadioButton.getText().toString().trim();
-        });
+        radioGroupUserType.setOnCheckedChangeListener(this::onUserTypeChanged);
+
         buttonSaveUserData = view.findViewById(R.id.btnSave);
+        buttonSaveUserData.setOnClickListener(v -> updateUserData());
 
-        getUserData();
-
-        buttonSaveUserData.setOnClickListener(v->{
-            updateUserData();
-        });
-
-        buttonCancelUserData  = view.findViewById(R.id.btnCancel);
-        buttonCancelUserData.setOnClickListener(V->{
-            getActivity().getSupportFragmentManager().popBackStack();
-        });
-        return view;
-
-
+        buttonCancelUserData = view.findViewById(R.id.btnCancel);
+        buttonCancelUserData.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
     }
 
+    /**
+     * Maneja el cambio de selección del tipo de usuario.
+     */
+    private void onUserTypeChanged(RadioGroup group, int checkedId) {
+        RadioButton selectedRadioButton = group.findViewById(checkedId);
+        typeUser = selectedRadioButton.getText().toString().trim();
+    }
+
+    /**
+     * Obtiene los datos del usuario actual del servidor y actualiza la UI.
+     */
     private void getUserData() {
         SharedPreferences prefs = getActivity().getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
         String idUserStr = prefs.getString("idUsuario", "0");
         int idUser = Integer.parseInt(idUserStr);
-        String token = prefs.getString("token","");
+        String token = prefs.getString("token", "");
 
         OkHttpClient client = new OkHttpClient();
-        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/showUserData/"+ idUser;
+        String url = "http://" + MainActivity.serverIP + ":8000/api/v1/showUserData/" + idUser;
 
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + token)
                 .get()
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Manejo de fallo
-                getActivity().runOnUiThread(new Runnable(){
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "Error al obtener los datos del usuario", Toast.LENGTH_LONG).show();
-                    }
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.error_fetching_user_data), Toast.LENGTH_LONG).show());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String responseBody = response.body().string();
-                    //Parseo el responseBody a un objeto JSON
-                    try{
+                    try {
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         JSONObject data = jsonResponse.getJSONObject("data");
-
                         String name = data.optString("name", "");
                         String email = data.optString("email", "");
-                        String typeUser = data.optString("type_user","");
+                        String userType = data.optString("type_user", "");
 
-                        //Actualizar la UI con los datos del usuario
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                EditText editTextUserName = getView().findViewById(R.id.editTextUserName);
-                                EditText editTextUserEmail = getView().findViewById(R.id.editTextUserEmail);
-                                RadioButton rbBasic = getView().findViewById(R.id.rbBasic);
-                                RadioButton rbAdvanced = getView().findViewById(R.id.rbAdvanced);
+                        getActivity().runOnUiThread(() -> {
+                            editTextUserName.setText(name);
+                            editTextUserEmail.setText(email);
 
-                                editTextUserName.setText(name);
-                                editTextUserEmail.setText(email);
-                                if ("Básico".equalsIgnoreCase(typeUser)) {
-                                    rbBasic.setChecked(true);
-                                } else if ("Avanzado".equalsIgnoreCase(typeUser)) {
-                                    rbAdvanced.setChecked(true);
-                                }
+                            if ("Básico".equalsIgnoreCase(userType)) {
+                                ((RadioButton) radioGroupUserType.findViewById(R.id.rbBasic)).setChecked(true);
+                            } else if ("Avanzado".equalsIgnoreCase(userType)) {
+                                ((RadioButton) radioGroupUserType.findViewById(R.id.rbAdvanced)).setChecked(true);
                             }
-
                         });
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("UsrDataFragment", "JSON parsing error", e);
                     }
+                } else {
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.error_fetching_user_data), Toast.LENGTH_SHORT).show());
                 }
             }
         });
     }
 
-
+    /**
+     * Envía una solicitud al servidor para actualizar los datos del usuario con la información proporcionada.
+     */
     private void updateUserData() {
         SharedPreferences prefs = getActivity().getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
-        String idUserStr = prefs.getString("idUsuario", "0"); // Recupera como String
+        String idUserStr = prefs.getString("idUsuario", "0");
         int idUser = Integer.parseInt(idUserStr);
-        String token = prefs.getString("token","");
+        String token = prefs.getString("token", "");
 
         OkHttpClient client = new OkHttpClient();
         String url = "http://" + MainActivity.serverIP + ":8000/api/v1/user/" + idUser;
 
-        EditText editTextUserName = getView().findViewById(R.id.editTextUserName);
-        EditText editTextUserEmail = getView().findViewById(R.id.editTextUserEmail);
-        EditText editTextUserPassword = getView().findViewById(R.id.editTextUserPassword);
-        RadioButton rbBasic = getView().findViewById(R.id.rbBasic);
-        String typeUser = rbBasic.isChecked() ? "Básico" : "Avanzado";
-        String nuevo_nombre=editTextUserName.getText().toString();
-
-
         FormBody.Builder formBuilder = new FormBody.Builder();
-
-        // Agregar los campos a la solicitud solo si no están vacíos
         if (!editTextUserName.getText().toString().isEmpty()) {
             formBuilder.add("name", editTextUserName.getText().toString());
         }
@@ -178,7 +174,7 @@ public class UsrDataFragment extends Fragment {
         if (!editTextUserPassword.getText().toString().isEmpty()) {
             formBuilder.add("password", editTextUserPassword.getText().toString());
         }
-        formBuilder.add("type_user", typeUser);
+        formBuilder.add("type_user", typeUser.equals(getString(R.string.basic_user)) ? "Básico" : "Avanzado");
 
         RequestBody formBody = formBuilder.build();
         Request request = new Request.Builder()
@@ -190,19 +186,16 @@ public class UsrDataFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error al actualizar los datos del usuario", Toast.LENGTH_LONG).show());
-                Log.e("ERROR DATOS USER", e.toString());
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.error_updating_user_data), Toast.LENGTH_LONG).show());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Datos del usuario actualizados correctamente", Toast.LENGTH_LONG).show());
-                    // Actualizar UI o realizar alguna acción después de la actualización
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.user_data_updated_successfully), Toast.LENGTH_LONG).show());
                 } else {
-                    String codigoSalida= response.body().string();
-                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), codigoSalida, Toast.LENGTH_LONG).show());
-                    Log.e("respuesta correcta ERROR DATOS USER", response.message());
+                    String responseBody = response.body().string();
+                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), responseBody, Toast.LENGTH_LONG).show());
                 }
             }
         });
@@ -210,7 +203,8 @@ public class UsrDataFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        // Maneja los clics en los elementos del menú.
+        if (item.getItemId() == android.R.id.home) {
             getActivity().onBackPressed();
             return true;
         }

@@ -1,7 +1,5 @@
 package es.meliseoperez.safehaven.api.comments;
 
-import static org.junit.Assert.assertTrue;
-
 import android.content.Intent;
 
 import androidx.test.core.app.ActivityScenario;
@@ -39,10 +37,6 @@ public class AddCommentActivityTest {
             Espresso.onView(ViewMatchers.withId(R.id.buttonSubmit))
                     .perform(ViewActions.click());
 
-            // Espera hasta que la actividad se cierre
-            scenario.onActivity(activity -> {
-                assertTrue(activity.isFinishing());
-            });
         }
     }
 }

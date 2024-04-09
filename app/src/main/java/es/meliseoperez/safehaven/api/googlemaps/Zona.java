@@ -3,8 +3,6 @@ package es.meliseoperez.safehaven.api.googlemaps;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
@@ -15,53 +13,57 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 import es.meliseoperez.safehaven.api.comments.ZonaDetallesActivity;
-import es.meliseoperez.safehaven.database.AlertRepository;
 
+/**
+ * La clase Zona representa una alerta geográfica en el mapa, la cual puede visualizarse como un polígono.
+ */
 public class Zona {
 
-    private final List<LatLng> coordenadas;// Lista que almacena las coordenadas de la zona.
-    private final String nivelAlarma; // Nombre de la zona
-    public final String descripcion;
-    public final String indicaciones;
-    public final int idAlerta;
-
-
+    private final List<LatLng> coordenadas; // Almacena las coordenadas del polígono de la zona.
+    private final String nivelAlarma; // Representa el nivel de alarma mediante colores.
+    public final String descripcion; // Descripción textual de la zona.
+    public final String indicaciones; // Instrucciones o recomendaciones para la zona.
+    public final int idAlerta; // Identificador único de la alerta.
 
     /**
-     * Constructor que recibe un String con las coordenadas.
+     * Constructor de la clase Zona.
+     * @param coordenadas Lista de coordenadas que forman el polígono de la zona.
+     * @param color Color representativo del nivel de alarma.
+     * @param descripcion Descripción de la zona.
+     * @param indicaciones Instrucciones específicas para la zona.
+     * @param idAlerta Identificador único para la alerta.
      */
     public Zona(List<LatLng> coordenadas, String color, String descripcion, String indicaciones, int idAlerta) {
         this.coordenadas = coordenadas;
         this.descripcion = descripcion;
         this.nivelAlarma = color;
-
         this.indicaciones = indicaciones;
         this.idAlerta = idAlerta;
     }
 
-
-
     /**
-     * Método privado que procesa el String de datos para obtener las coordenadas.
-     *
-     * @param data String con las coordenadas.
+     * Parsea un string conteniendo coordenadas latitud/longitud y las convierte en una lista de LatLng.
+     * @param data String que contiene las coordenadas.
+     * @return Lista de objetos LatLng generados a partir del string.
      */
     public static List<LatLng> parsearCoordenadas(String data) {
-        // Usamos una expresión regular para identificar y extraer las coordenadas.
         List<LatLng> coordenadasProcesadas = new ArrayList<>();
         String regex = "(\\d+\\.\\d+),(-?\\d+\\.\\d+)";
         Matcher matcher = Pattern.compile(regex).matcher(data);
-
         while (matcher.find()) {
             double lat = Double.parseDouble(matcher.group(1));
             double lng = Double.parseDouble(matcher.group(2));
-            coordenadasProcesadas.add(new LatLng(lat, lng)); // Añadir la coordenada a la lista.
+            coordenadasProcesadas.add(new LatLng(lat, lng));
         }
         return coordenadasProcesadas;
     }
 
+    /**
+     * Extrae el color asociado al nivel de alarma de una cadena de texto.
+     * @param headline Texto que contiene el nivel de alarma.
+     * @return Color en formato string.
+     */
     public static String extractColorFromHeadline(String headline) {
         Pattern pattern = Pattern.compile("nivel (\\w+)");
         Matcher matcher = pattern.matcher(headline);
@@ -71,91 +73,70 @@ public class Zona {
         return "transparente";
     }
 
+    /**
+     * Convierte el nombre de un color a su correspondiente valor ARGB como entero.
+     * @param colorName Nombre del color.
+     * @return Valor ARGB del color.
+     */
     private int getColorFromString(String colorName) {
         switch (colorName.toLowerCase()) {
-            case "rojo":
-                return 0xFFFF0000;//Color rojo
-            case "verde":
-                return 0xFF00FF00;//Color verde
-            case "amarillo":
-                return 0xFFFFFF00;//Color amarillo
-            case "naranja":
-                return 0xFFFFA500; // Color naranja
-            default:
-                return 0x00000000; // Por defecto transparente
+            case "rojo": return 0xFFFF0000;
+            case "verde": return 0xFF00FF00;
+            case "amarillo": return 0xFFFFFF00;
+            case "naranja": return 0xFFFFA500;
+            default: return 0x00000000; // Transparente
         }
     }
 
     /**
-     * Método que dibuja la zona en el mapa proporcionado.
-     *
-     * @param mapa Instancia de GoogleMap donde se dibujará la zona.
+     * Dibuja la zona en el mapa proporcionado usando un polígono.
+     * @param mapa GoogleMap donde se dibujará la zona.
+     * @param context Contexto utilizado para iniciar una nueva actividad.
      */
-    public void dibujarZona(GoogleMap mapa, Context context ){
-        InformacionPoligo infoPoligono = new InformacionPoligo(this.idAlerta, this.descripcion,this.indicaciones);
+    public void dibujarZona(GoogleMap mapa, Context context) {
+        InformacionPoligo infoPoligono = new InformacionPoligo(this.idAlerta, this.descripcion, this.indicaciones);
 
-        // Asegúrate de que las coordenadas no estén vacías o no inicializadas.
-        if (coordenadas == null || coordenadas.isEmpty()) {
+        if (coordenadas.isEmpty()) {
             throw new IllegalStateException("Coordenadas no inicializadas o vacías");
         }
 
-        // Convierte el nombre del color en un valor de color.
         int fillColor = getColorFromString(this.nivelAlarma);
-
-        // Crea las opciones de polígono con las coordenadas y configura estilos.
         PolygonOptions polygonOptions = new PolygonOptions()
                 .addAll(coordenadas)
-                .fillColor(fillColor) // Color de relleno del polígono.
-                .strokeWidth(5) // Ancho del borde del polígono.
-                .clickable(true); // Hace que el polígono sea clickable.
+                .fillColor(fillColor)
+                .strokeWidth(5)
+                .clickable(true);
 
-        // Agrega el polígono al mapa y guarda la instancia del polígono.
-        Polygon polygon = mapa.addPolygon(polygonOptions);
-        polygon.setTag(infoPoligono); // Establece la descripcion como tag para el polígono.
-        mapa.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-            @Override
-            public void onPolygonClick(@NonNull Polygon polygon) {
-                // Obtiene el objeto InformacionPoligo asociado al polígono clickeado.
-                InformacionPoligo infoPoligono = (InformacionPoligo) polygon.getTag();
+        Polygon addPolygon = mapa.addPolygon(polygonOptions);
+        addPolygon.setTag(infoPoligono);
 
-                // Ahora puedes usar infoPoligono para obtener el idAlerta específico de este polígono.
-                int idAlertaClickeada = infoPoligono.getIdAlerta();
-
-                AlertRepository accesoBD = new AlertRepository(context.getApplicationContext());
-                accesoBD.open();
-                AlertInfo alerta = accesoBD.getAlertById(idAlertaClickeada);
-                //Iniciar ZonaDetallesActivity pasando el ID de la zona como extra
-                Intent intent = new Intent(context, ZonaDetallesActivity.class);
-                intent.putExtra("ZONA_ID", idAlertaClickeada);
-
-                intent.putExtra("ZONA_DESCRIPCION", alerta.getDescription() != null ?  alerta.getDescription() : "No hay descripción para la alerta." );
-                intent.putExtra("ZONA_INSTRUCCIONES", alerta.getInstruction() != null ? alerta.getInstruction() : "No hay instrucciones para la alerta.");
-
-
-                context.startActivity(intent);
-            }
+        mapa.setOnPolygonClickListener(polygon -> {
+            InformacionPoligo info = (InformacionPoligo) polygon.getTag();
+            Intent intent = new Intent(context, ZonaDetallesActivity.class)
+                    .putExtra("ZONA_ID", info.getIdAlerta())
+                    .putExtra("ZONA_DESCRIPCION", info.getDescription())
+                    .putExtra("ZONA_INSTRUCCIONES", info.getIndicaciones());
+            context.startActivity(intent);
         });
     }
-    //Clase auxiliar para almacenar información sobre alertas,
-    public class InformacionPoligo{
+
+    /**
+     * Clase auxiliar para almacenar información relevante de la zona para su posterior uso.
+     */
+    public class InformacionPoligo {
+        private final int idAlerta;
         private final String description;
         private final String indicaciones;
 
-        private final int idAlerta;
-
         public InformacionPoligo(int idAlerta, String description, String indicaciones) {
+            this.idAlerta = idAlerta;
             this.description = description;
             this.indicaciones = indicaciones;
-            this.idAlerta = idAlerta;
         }
 
-        public String getDescription() {
-            return description;
-        }
-
-        public String getIndicaciones() {
-            return indicaciones;
-        }
-        public int getIdAlerta(){return idAlerta;}
+        // Métodos getters para acceder a la información almacenada.
+        public int getIdAlerta() { return idAlerta; }
+        public String getDescription() { return description; }
+        public String getIndicaciones() { return indicaciones; }
     }
 }
