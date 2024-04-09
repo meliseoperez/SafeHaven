@@ -1,6 +1,5 @@
 package es.meliseoperez.safehaven.api.comments;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,16 @@ import java.util.List;
 
 import es.meliseoperez.safehaven.R;
 
+/**
+ * Adaptador para el RecyclerView que muestra comentarios.
+ * Convierte cada objeto Comentario en elementos de la vista que pueden ser agregados al RecyclerView.
+ */
 public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.ViewHolder> {
 
     private List<Comentario> comentarioList;
     private OnComentarioClickListener listener;
 
-    public ComentariosAdapter(List<Comentario> comentarioList, OnComentarioClickListener listener){
+    public ComentariosAdapter(List<Comentario> comentarioList, OnComentarioClickListener listener) {
         this.comentarioList = comentarioList;
         this.listener = listener;
     }
@@ -33,52 +36,55 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comentario, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comentario, parent, false);
         return new ViewHolder(view);
     }
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comentario comentario = comentarioList.get(position);
         holder.commentTextView.setText(comentario.getCommentText());
-        // Cargar la imagen usando Glide
+        // Uso de Glide para la carga eficiente de imágenes desde una URL.
         Glide.with(holder.itemView.getContext())
-                .load(comentario.getImageUrl()) // Asegúrate de que tu clase Comentario tenga un getter para imageUrl
+                .load(comentario.getImageUrl())
                 .into(holder.commentImageView);
     }
 
     @Override
     public int getItemCount() {
-        Log.d("MIERDA: ", "VALOR DE GETITEMCOUNT: " + String.valueOf(comentarioList.size()));
         return comentarioList.size();
     }
 
     public void setComentariosList(List<Comentario> nuevosComentarios) {
-       this.comentarioList = nuevosComentarios;
-       notifyDataSetChanged();//Notifica que los datos han cambiado para refrescar la vista
+        this.comentarioList = nuevosComentarios;
+        notifyDataSetChanged(); // Notifica cambios para actualizar la vista.
     }
 
+    /**
+     * ViewHolder para elementos de comentario.
+     * Incluye un TextView para el texto del comentario y un ImageView para una imagen asociada, si existe.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView commentTextView;
         public ImageView commentImageView;
-        //Declarar otros elementos de la vista
-        public ViewHolder(View itemView){
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             commentTextView = itemView.findViewById(R.id.commentTextView);
             commentImageView = itemView.findViewById(R.id.commentImageView);
-            //Inicializar otros elementos de la vista
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(listener != null && getAdapterPosition() != RecyclerView.NO_POSITION){
-                        Comentario comentario = comentarioList.get(getAdapterPosition());
-                        Log.d("ComentarioClick", "Comentario ID: " + comentario.getId());
-                        listener.onComentarioClick(comentarioList.get(getAdapterPosition()));
-                    }
+
+            itemView.setOnClickListener(view -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onComentarioClick(comentarioList.get(getAdapterPosition()));
                 }
             });
         }
     }
-    public interface OnComentarioClickListener{
+
+    /**
+     * Interfaz para manejar clics en elementos de la lista de comentarios.
+     */
+    public interface OnComentarioClickListener {
         void onComentarioClick(Comentario comentario);
     }
 }
