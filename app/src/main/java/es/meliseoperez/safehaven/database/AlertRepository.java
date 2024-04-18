@@ -123,16 +123,22 @@ public class AlertRepository implements AutoCloseable {
     public AlertInfo getAlertById(int alertID) {
         String selection = AlertContract.AlertEntry.COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(alertID)};
+        Log.d(TAG, "Buscando alerta con ID: " + alertID);
 
         try (Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME, null, selection, selectionArgs, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
-                return cursorToAlert(cursor);
+                AlertInfo alert = cursorToAlert(cursor);
+                Log.d(TAG, "Alerta encontrada: " + alert);
+                return alert;
+            } else {
+                Log.d(TAG, "No se encontraron registros para el ID: " + alertID);
             }
         } catch (SQLException e) {
             Log.e(TAG, "Error al buscar la alerta por ID: " + alertID, e);
         }
         return null;
     }
+
 
     @Override
     public void close() {
