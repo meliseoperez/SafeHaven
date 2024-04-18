@@ -56,7 +56,7 @@ public class AlertsExtractor {
      * @return Lista de objetos AlertInfo con la información de las alertas.
      * @throws IOException Si ocurre un error al leer el archivo.
      */
-    public List<AlertInfo> extractAlertsInfo() throws IOException {
+    public List<AlertInfo> extractAlertsInfo() {
         List<AlertInfo> alerts = new ArrayList<>();
 
         File contentFile = new File(context.getFilesDir(), "alertas2.json");
@@ -76,7 +76,7 @@ public class AlertsExtractor {
 
         } catch (IOException e) {
             Log.e(TAG, "Error al leer el archivo: " + e.getMessage());
-            throw e;
+
         }
 
         return alerts;
