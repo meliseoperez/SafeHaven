@@ -13,12 +13,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import es.meliseoperez.safehaven.api.aemet.DownloadAndStoreJSONAlerts;
-import es.meliseoperez.safehaven.api.aemet.MyCallBack;
-
 /**
- * Pruebas instrumentadas para DownloadAndStoreJSONAlerts.
- * Verifica la funcionalidad de descarga y almacenamiento de datos JSON.
+ * Pruebas instrumentadas para {@link DownloadAndStoreJSONAlerts}, que verifica la funcionalidad de descarga
+ * y almacenamiento de datos JSON relacionados con alertas meteorológicas.
  */
 @RunWith(AndroidJUnit4.class)
 public class DownloadAndStoreJSONAlertsTest {
@@ -27,8 +24,8 @@ public class DownloadAndStoreJSONAlertsTest {
     private DownloadAndStoreJSONAlerts downloadAndStoreJSONAlerts;
 
     /**
-     * Configuración inicial antes de cada prueba.
-     * Inicializa el contexto y la instancia de DownloadAndStoreJSONAlerts.
+     * Prepara el entorno de prueba antes de ejecutar cada método de test.
+     * Inicializa el contexto de la aplicación y la instancia de {@link DownloadAndStoreJSONAlerts}.
      */
     @Before
     public void setUp() {
@@ -39,8 +36,8 @@ public class DownloadAndStoreJSONAlertsTest {
     }
 
     /**
-     * Prueba para verificar la descarga y almacenamiento de datos JSON.
-     * Utiliza una implementación de MyCallBack para verificar el resultado.
+     * Test para verificar la correcta descarga y almacenamiento de datos JSON de alertas.
+     * Utiliza una implementación de {@link MyCallBack} para verificar que el proceso se complete con éxito.
      */
     @Test
     public void testDownloadData() {
@@ -48,23 +45,13 @@ public class DownloadAndStoreJSONAlertsTest {
         MyCallBack myCallback = new MyCallBack() {
             @Override
             public void onCompleted() {
-                // Verificar que el archivo se ha guardado correctamente
+                // Verificar que el archivo de alertas se haya guardado correctamente
                 File file = new File(context.getFilesDir(), "alertas2.json");
                 assertTrue("El archivo de alertas debería existir", file.exists());
-                // Opcionales: Más comprobaciones, como verificar el contenido del archivo.
             }
         };
 
         // Ejecutar la descarga de datos
         downloadAndStoreJSONAlerts.downloadData(myCallback, context);
-
-        // Nota: Aquí, idealmente se usaría un mecanismo de sincronización como CountDownLatch
-        // para esperar a que se complete la descarga antes de hacer las aserciones.
-        // Este enfoque simplificado asume que la callback onCompleted será invocada correctamente.
     }
-
-    // Adicional: Pruebas para situaciones de error, como respuestas fallidas del servidor,
-    // se pueden agregar aquí utilizando un servidor mock o configurando el cliente OkHttpClient
-    // para usar respuestas predefinidas.
-
 }

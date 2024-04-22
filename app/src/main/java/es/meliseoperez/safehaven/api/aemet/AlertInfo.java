@@ -1,22 +1,51 @@
 package es.meliseoperez.safehaven.api.aemet;
 
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.List;
 
+/**
+ * Clase AlertInfo: Representa la información de alerta obtenida de AEMET (Agencia Estatal de Meteorología).
+ * Almacena detalles como identificador, efectividad, inicio, expiración, emisor, título, descripción,
+ * instrucciones, idioma, polígono y color de la alerta, junto con las coordenadas geográficas.
+ */
 public class AlertInfo {
+    // Identificador único de la alerta.
     public int id;
+
+    // Fecha de efectividad de la alerta.
     public String effective;
+
+    // Fecha de inicio de la alerta.
     public String onset;
+
+    // Fecha de expiración de la alerta.
     public String expires;
+
+    // Nombre del emisor de la alerta.
     public String senderName;
+
+    // Título de la alerta.
     public String headline;
+
+    // Descripción detallada de la alerta.
     public String description;
+
+    // Instrucciones para la respuesta o acción recomendada.
     public String instruction;
+
+    // Idioma de la información de la alerta.
     public String language;
+
+    // Representación de polígono de la zona de alerta en formato de cadena.
     public String polygon;
+
+    // Color asociado a la alerta para visualización.
     public String color;
+
+    // Coordenadas geográficas del polígono de alerta.
     private List<LatLng> coordenadas;
+
+    // Métodos getters y setters para cada campo con documentación básica.
 
     public int getId() {
         return id;
@@ -116,9 +145,9 @@ public class AlertInfo {
 
     @Override
     public String toString() {
-        // Formato personalizado para la impresión de información de alerta.
+        // Proporciona una representación en cadena de la información de la alerta para propósitos de depuración o registro.
         return "AlertInfo{" +
-                "id=" + id + '\'' +
+                "id=" + id +
                 ", effective='" + effective + '\'' +
                 ", onset='" + onset + '\'' +
                 ", expires='" + expires + '\'' +
@@ -128,7 +157,7 @@ public class AlertInfo {
                 ", instruction='" + instruction + '\'' +
                 ", language='" + language + '\'' +
                 ", polygon='" + polygon + '\'' +
+                ", color='" + color + '\'' +
                 '}';
     }
-
 }
