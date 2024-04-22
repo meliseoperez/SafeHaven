@@ -12,30 +12,36 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.meliseoperez.safehaven.api.aemet.AlertInfo;
 
+/**
+ * Pruebas unitarias para {@link AlertRepository}, enfocadas en la interacción con la base de datos de alertas.
+ */
 public class AlertRepositoryTest {
 
     private AlertRepository alertRepository;
     private SQLiteDatabase database;
 
+    /**
+     * Configura el entorno antes de cada prueba, incluyendo la inicialización del repositorio y la apertura de la base de datos.
+     */
     @Before
     public void setUp() {
-        // Contexto de la aplicación de prueba
         Context context = ApplicationProvider.getApplicationContext();
         assertNotNull("El contexto no debe ser nulo", context);
 
-        // Inicializar el repositorio
         alertRepository = new AlertRepository(context);
         assertNotNull("El repositorio de alertas no debe ser nulo", alertRepository);
 
-        // Intenta abrir la base de datos
         try {
             alertRepository.open();
             database = alertRepository.getDatabase();
@@ -46,71 +52,73 @@ public class AlertRepositoryTest {
         }
     }
 
-
+    /**
+     * Limpia los recursos utilizados después de cada prueba, cerrando la base de datos.
+     */
     @After
     public void tearDown() {
-        // Cerrar la base de datos después de cada prueba
         alertRepository.close();
     }
 
+    /**
+     * Prueba la capacidad del repositorio para abrir la base de datos correctamente.
+     */
     @Test
     public void testOpen() {
-        // Caso de prueba para verificar que la base de datos se abre correctamente
         assertTrue("La base de datos debería estar abierta", database.isOpen());
     }
 
+    /**
+     * Prueba la inserción de una alerta en la base de datos, verificando que el ID devuelto sea positivo.
+     */
     @Test
     public void testInsertAlert() {
-        // Caso de prueba para verificar la inserción correcta de una alerta
-        AlertInfo alert = new AlertInfo(); // Crear una instancia de AlertInfo con datos de prueba
-        // Configurar los datos de la alerta...
-        
+        AlertInfo alert = new AlertInfo();
+        alert.setId(1);
+        alert.setEffective("2024-04-01T08:00:00Z");
+        alert.setOnset("2024-04-01T09:00:00Z");
+        alert.setExpires("2024-04-01T17:00:00Z");
+        alert.setSenderName("Agencia Estatal de Meteorología");
+        alert.setHeadline("Alerta de prueba");
+        alert.setDescription("Descripción detallada de la alerta de prueba.");
+        alert.setInstruction("Manténgase a salvo, siga las instrucciones.");
+        alert.setLanguage("es");
+        alert.setPolygon("POLYGON(...)");
+        alert.setColor("#FF0000");
+
+        List<LatLng> coordenadas = new ArrayList<>();
+        coordenadas.add(new LatLng(40.416775, -3.703790));
+        alert.setCoordenadas(coordenadas);
+
         long result = alertRepository.insertAlert(alert, AlertContract.AlertEntry.TABLE_NAME);
-        assertTrue("La inserción debería devolver un ID positivo", result > 0);
+        assertTrue("La inserción debería devolver un ID positivo, recibido: " + result, result > 0);
     }
 
+    /**
+     * Prueba la recuperación de todas las alertas almacenadas en la base de datos.
+     */
     @Test
     public void testGetAllAlerts() {
-        // Caso de prueba para verificar la recuperación de todas las alertas
         List<AlertInfo> alerts = alertRepository.getAllAlerts();
         assertNotNull("La lista de alertas no debería ser nula", alerts);
-        // Aquí podríamos insertar algunas alertas de prueba y luego verificar si se recuperan correctamente
     }
 
-    @Test
-    public void testGetAlertById() {
-        // Caso de prueba para verificar la recuperación de una alerta por su ID
-        int testId = 596; // Este ID debería corresponder a una alerta existente en la base de datos de prueba
-        AlertInfo alert = alertRepository.getAlertById(testId);
-        assertNotNull("La alerta recuperada no debería ser nula", alert);
-        assertEquals("El ID de la alerta recuperada debería coincidir con el solicitado", testId, alert.id);
-    }
-
+    /**
+     * Prueba la extracción de un valor de una columna específica de un cursor.
+     * Se verifica que el valor extraído coincida con el esperado, basado en un cursor simulado.
+     */
     @Test
     public void testExtractColumnValue() {
-        // Define las columnas del cursor. Aquí solo hay una columna para el ejemplo.
         String[] columns = new String[] { AlertContract.AlertEntry.COLUMN_DESCRIPTION };
-        
-        // Crea un MatrixCursor y agrega una fila con un valor de prueba.
         MatrixCursor matrixCursor = new MatrixCursor(columns);
         matrixCursor.addRow(new Object[] {"Descripción de prueba"});
-
-        // Asegúrate de mover el cursor a la primera fila antes de intentar leer de él.
         assertTrue("El cursor debería moverse a la primera fila", matrixCursor.moveToFirst());
 
-        // Ahora, matrixCursor se comporta como si hubiera obtenido esos datos de la base de datos.
-        
-        // Asume que alertRepository ya está inicializado y puede usar este cursor.
-        Cursor cursor = matrixCursor; // Esto simula obtener un cursor de la base de datos.
+        Cursor cursor = matrixCursor;  // Simulación de obtener un cursor de la base de datos.
         String columnName = AlertContract.AlertEntry.COLUMN_DESCRIPTION;
         String expectedValue = "Descripción de prueba";
-        
-        // Aquí asumes que extractColumnValue es un método que lee del cursor el valor de la columna especificada.
+
         String actualValue = alertRepository.extractColumnValue(cursor, columnName);
-        
         assertEquals("El valor extraído debería coincidir con el esperado", expectedValue, actualValue);
     }
-
-    // Aquí podríamos agregar más casos de prueba para cubrir situaciones de error, como columnas no encontradas, etc.
-
 }

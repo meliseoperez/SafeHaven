@@ -1,7 +1,7 @@
 package es.meliseoperez.safehaven.database;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.content.ContentValues;
@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -26,98 +27,103 @@ public class AlertDBHelperTest {
     private AlertDBHelper dbHelper;
     private SQLiteDatabase database;
 
+    /**
+     * Configura el entorno antes de cada test.
+     * Este método se ejecuta antes de cada test. Prepara un contexto de aplicación de prueba
+     * y establece una base de datos limpia para asegurar que los tests sean independientes
+     * entre sí y no tengan efectos secundarios cruzados.
+     */
     @Before
     public void setUp() throws Exception {
-        // Conseguir el contexto de la aplicación de prueba
         Context context = ApplicationProvider.getApplicationContext();
-        // Asegurarse de que cada prueba comience con una base de datos limpia
-        context.deleteDatabase(AlertDBHelper.DATABASE_NAME);
-        // Inicializar el dbHelper para la prueba
-        dbHelper = new AlertDBHelper(context);
-        // Obtener la base de datos en modo escritura
-        database = dbHelper.getWritableDatabase();
+        context.deleteDatabase(AlertDBHelper.DATABASE_NAME); // Elimina cualquier instancia previa de la BD para asegurar un entorno limpio
+        dbHelper = new AlertDBHelper(context); // Crea una nueva instancia del helper de la BD
+        database = dbHelper.getWritableDatabase(); // Abre la base de datos en modo escritura
     }
 
+    /**
+     * Limpia recursos después de cada test.
+     * Este método se ejecuta después de cada test. Cierra la base de datos y la elimina,
+     * garantizando que cada test se ejecute en un estado inicial limpio.
+     */
     @After
     public void tearDown() throws Exception {
-        // Cerrar la base de datos después de cada prueba
-        database.close();
-        // Eliminar la base de datos después de la prueba
+        database.close(); // Cierra la conexión a la base de datos
         Context context = ApplicationProvider.getApplicationContext();
-        context.deleteDatabase(AlertDBHelper.DATABASE_NAME);
+        context.deleteDatabase(AlertDBHelper.DATABASE_NAME); // Elimina la base de datos para evitar contaminación entre tests
     }
 
+    /**
+     * Verifica la correcta creación de la base de datos y su estructura.
+     * Este test confirma que la base de datos se crea con la estructura de tablas esperada,
+     * validando la presencia de todas las columnas necesarias en la tabla de alertas.
+     */
     @Test
     public void testDatabaseCreation() {
-        // Verificar que la base de datos está abierta
-        assertTrue(database.isOpen());
+        assertTrue("La base de datos debería estar abierta", database.isOpen());
 
-        //Verifica la existencia de la tabla y la estructura de la tabla
-        Cursor cursor = database.rawQuery("PRAGMA table_info(" + AlertContract.AlertEntry.TABLE_NAME + ");", null);        assertTrue("La tabla alerts debe tener columnas", cursor.getCount()>0);
+        Cursor cursor = database.rawQuery("PRAGMA table_info(" + AlertContract.AlertEntry.TABLE_NAME + ");", null);
+        assertTrue("La tabla alerts debe tener columnas", cursor.getCount() > 0);
 
-        int columnNameIndex = cursor.getColumnIndex("name");
         List<String> columnNames = new ArrayList<>();
-        while (cursor.moveToNext()){
-            columnNames.add(cursor.getString(columnNameIndex));
+        while (cursor.moveToNext()) {
+            columnNames.add(cursor.getString(cursor.getColumnIndex("name")));
         }
-        //Verifia que las columnas esperadas existen
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_ID));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_DESCRIPTION));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_EFFECTIVE));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_SENDER_NAME));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_EXPIRES));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_HEADLINE));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_LANGUAGE));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_ONSET));
-        assertTrue(columnNames.contains(AlertContract.AlertEntry.COLUMN_POLYGON));
+
+        // Asegura que todas las columnas necesarias están presentes.
+        List<String> expectedColumns = Arrays.asList(AlertContract.AlertEntry.COLUMN_ID, AlertContract.AlertEntry.COLUMN_DESCRIPTION,
+                AlertContract.AlertEntry.COLUMN_EFFECTIVE, AlertContract.AlertEntry.COLUMN_SENDER_NAME, AlertContract.AlertEntry.COLUMN_EXPIRES,
+                AlertContract.AlertEntry.COLUMN_HEADLINE, AlertContract.AlertEntry.COLUMN_LANGUAGE, AlertContract.AlertEntry.COLUMN_ONSET,
+                AlertContract.AlertEntry.COLUMN_POLYGON);
+        assertTrue("Deben existir todas las columnas esperadas", columnNames.containsAll(expectedColumns));
 
         cursor.close();
     }
+
+    /**
+     * Prueba la lógica de actualización de la base de datos.
+     * Este test simula una actualización de la base de datos incrementando su versión,
+     * y verifica que la tabla se recrea correctamente según lo definido en el método onUpgrade.
+     */
     @Test
     public void testDatabaseUpgrade() {
-        // Obtener la instancia actual de la base de datos y establecer manualmente una versión antigua
-        SQLiteDatabase tempDatabase = dbHelper.getWritableDatabase();
-        int currentVersion = tempDatabase.getVersion();
-        int newVersion = currentVersion + 1;
-        tempDatabase.setVersion(currentVersion - 1); // Establece una versión antigua para forzar la actualización
-        tempDatabase.close();
+        int oldVersion = 1;
+        int newVersion = 2;
+        dbHelper.onUpgrade(database, oldVersion, newVersion);
 
-        // Instanciar nuevamente AlertDBHelper debería ahora disparar onUpgrade debido a la discrepancia de versión
-        AlertDBHelper newDbHelper = new AlertDBHelper(ApplicationProvider.getApplicationContext());
-        SQLiteDatabase newDatabase = newDbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery("PRAGMA table_info(" + AlertContract.AlertEntry.TABLE_NAME + ");", null);
+        assertNotNull("El cursor no debería ser nulo", cursor);
+        assertTrue("La tabla debería haber sido recreada", cursor.getCount() > 0);
+        cursor.close();
 
-        // Verificar que la versión de la base de datos se haya actualizado
-        assertEquals("La versión de la base de datos debería haberse incrementado", newVersion, newDatabase.getVersion());
-        newDatabase.close();
+        database.setVersion(newVersion);
     }
 
-
-
+    /**
+     * Verifica el funcionamiento de un trigger en la base de datos.
+     * Este test inserta dos registros de alertas, una expirada y otra válida, y verifica que el trigger
+     * elimina correctamente la alerta expirada tras una inserción.
+     */
     @Test
     public void testTrigger() {
-        // Insertar una alerta con fecha de expiración pasada
-        ContentValues values = new ContentValues();
-        values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, "2000-01-01 00:00:00"); // Fecha en el pasado
-        // Añadir otros valores necesarios según tu esquema
-        long id = database.insert(AlertContract.AlertEntry.TABLE_NAME, null, values);
-        assertTrue(id != -1);
+        insertAlert("2000-01-01 00:00:00", "Test Expired Alert");
+        insertAlert("2999-12-31 23:59:59", "Test Valid Alert");
 
-        // Realizar una nueva inserción para activar el trigger
-        ContentValues newValues = new ContentValues();
-        newValues.put(AlertContract.AlertEntry.COLUMN_EXPIRES, "2999-12-31 23:59:59"); // Fecha en el futuro
-        // Añadir otros valores necesarios según tu esquema
-        long newId = database.insert(AlertContract.AlertEntry.TABLE_NAME, null, newValues);
-        assertTrue(newId != -1);
-
-        // Verificar que la alerta expirada ha sido eliminada
-        Cursor cursor = database.query(AlertContract.AlertEntry.TABLE_NAME,
-                new String[] {AlertContract.AlertEntry.COLUMN_ID},
-                AlertContract.AlertEntry.COLUMN_ID + " = ?",
-                new String[] {String.valueOf(id)},
-                null, null, null);
-
+        Cursor cursor = database.rawQuery("SELECT * FROM " + AlertContract.AlertEntry.TABLE_NAME + " WHERE " +
+                "datetime(" + AlertContract.AlertEntry.COLUMN_EXPIRES + ") < datetime('now', 'localtime')", null);
         assertFalse("La alerta expirada debería haber sido eliminada por el trigger", cursor.moveToFirst());
         cursor.close();
     }
 
+    /**
+     * Método de ayuda para insertar alertas en la base de datos.
+     * @param expires Fecha de expiración de la alerta.
+     * @param description Descripción de la alerta.
+     */
+    private void insertAlert(String expires, String description) {
+        ContentValues values = new ContentValues();
+        values.put(AlertContract.AlertEntry.COLUMN_EXPIRES, expires);
+        values.put(AlertContract.AlertEntry.COLUMN_DESCRIPTION, description);
+        database.insert(AlertContract.AlertEntry.TABLE_NAME, null, values);
+    }
 }

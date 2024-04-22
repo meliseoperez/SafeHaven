@@ -16,25 +16,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.meliseoperez.MainActivity;
+import es.meliseoperez.safehaven.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Realiza solicitudes a la API para cargar comentarios y actualiza la UI basada en la respuesta.
+ */
 public class ConsultaComentariosAPI {
 
     private final Context context;
     private final SharedPreferences sharedPreferences;
     private final ComentariosAdapter comentariosAdapter;
 
-
     public ConsultaComentariosAPI(Context context, ComentariosAdapter comentariosAdapter) {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences("mis_preferencias", Context.MODE_PRIVATE);
         this.comentariosAdapter = comentariosAdapter;
-
     }
 
+    /**
+     * Carga los comentarios de la API y los muestra en el RecyclerView a través del adapter.
+     *
+     * @param idAlert El ID de la alerta para la que cargar los comentarios, null para cargar todos.
+     * @param tipo    El tipo de comentarios a cargar.
+     */
     public void cargaComentarios(Integer idAlert, String tipo) {
         String token = sharedPreferences.getString("token", "");
         OkHttpClient client = new OkHttpClient();
@@ -51,71 +59,56 @@ public class ConsultaComentariosAPI {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                // Aquí asumimos que si la llamada no tiene éxito, aún tenemos un cuerpo de respuesta con un mensaje
                 String responseData = response.body().string();
                 if (response.isSuccessful()) {
                     List<Comentario> comentarioList = parseComentarios(responseData);
-                    runOnUiThread(() -> {
-                        comentariosAdapter.setComentariosList(comentarioList);
-                        comentariosAdapter.notifyDataSetChanged();
-                    });
+                    runOnUiThread(() -> comentariosAdapter.setComentariosList(comentarioList));
                 } else {
-                    // Aquí manejas el caso de error, incluyendo el error 404
-                    Gson gson = new Gson();
-                    try {
-                        ErrorResponseComentario errorResponse = gson.fromJson(responseData, ErrorResponseComentario.class);
-                        if (errorResponse != null && errorResponse.getError() != null) {
-                            // Aquí decides mostrar el mensaje de error como un comentario
-                            List<Comentario> comentarioList = new ArrayList<>();
-                            Comentario comentarioError = new Comentario();
-                            comentarioError.setCommentText(errorResponse.getError()); // Asume que tienes un método setCommentText en tu clase Comentario
-                            comentarioList.add(comentarioError);
-                            runOnUiThread(() -> {
-                                comentariosAdapter.setComentariosList(comentarioList);
-                                comentariosAdapter.notifyDataSetChanged();
-                            });
-                        }
-                    } catch (JsonParseException e) {
-                        showErrorToast("Error al procesar la respuesta del servidor.");
-                        Log.e("Error al procesar response reserver",e.toString());
-                    } catch (Exception e) {
-                        showErrorToast("Error desconocido.");
-                        Log.e("AppError", "Error desconocido", e);
-                    }
+                    handleErrorResponse(responseData);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                showErrorToast("Error de conexión con el servidor.");
-            }
-
-            private void runOnUiThread(Runnable action) {
-                ((AppCompatActivity) context).runOnUiThread(action);
-            }
-
-            private void showErrorToast(String message) {
-                runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+                showErrorToast(context.getString(R.string.server_connection_error));
             }
         });
     }
 
-    private List<Comentario> parseComentarios(String responseData) throws JsonParseException {
+    private void handleErrorResponse(String responseData) {
         Gson gson = new Gson();
-        // Intenta primero deserializar a la estructura esperada de comentarios
         try {
-            ComentariosResponse comentariosResponse = gson.fromJson(responseData, ComentariosResponse.class);
-            if (comentariosResponse != null && comentariosResponse.getData() != null) {
-                return comentariosResponse.getData();
-            }
-        } catch (JsonParseException ignored) {
-            // Si falla, intenta deserializar a la estructura de error
             ErrorResponseComentario errorResponse = gson.fromJson(responseData, ErrorResponseComentario.class);
             if (errorResponse != null && errorResponse.getError() != null) {
-                throw new JsonParseException(errorResponse.getError());
+                showErrorMessageAsToast(errorResponse.getError());
+            } else {
+                showErrorToast(context.getString(R.string.comment_send_error));
             }
+        } catch (JsonParseException e) {
+            showErrorToast(context.getString(R.string.server_response_error));
+            Log.e("ConsultaComentariosAPI", "Error al procesar la respuesta del servidor", e);
         }
-        return new ArrayList<>();
     }
 
+    private List<Comentario> parseComentarios(String responseData) {
+        Gson gson = new Gson();
+        ComentariosResponse comentariosResponse = gson.fromJson(responseData, ComentariosResponse.class);
+        return comentariosResponse != null ? comentariosResponse.getData() : new ArrayList<>();
+    }
+
+    private void runOnUiThread(Runnable action) {
+        ((AppCompatActivity) context).runOnUiThread(action);
+    }
+
+    private void showErrorToast(String message) {
+        runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+    }
+
+    private void showErrorMessageAsToast(String errorMessage) {
+        List<Comentario> comentarioList = new ArrayList<>();
+        Comentario comentarioError = new Comentario();
+        comentarioError.setCommentText(errorMessage); // Asume que tienes un método setCommentText en tu clase Comentario
+        comentarioList.add(comentarioError);
+        runOnUiThread(() -> comentariosAdapter.setComentariosList(comentarioList));
+    }
 }
