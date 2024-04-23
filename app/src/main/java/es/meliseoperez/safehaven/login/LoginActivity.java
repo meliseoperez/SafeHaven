@@ -3,6 +3,7 @@ package es.meliseoperez.safehaven.login;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -67,10 +68,12 @@ public class LoginActivity extends AppCompatActivity {
             String passwordValue = passwordEditText.getText().toString();
 
             // Verificar si los campos están vacíos
-            if(emailValue.isEmpty() || passwordValue.isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Email o password vacíos.", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Email or password is empty.");
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                if(emailValue.isEmpty() || passwordValue.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Email o password vacíos.", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "Email or password is empty.");
+                    return;
+                }
             }
             // Llamada al método de inicio de sesión
             loginUser(emailValue, passwordValue);
