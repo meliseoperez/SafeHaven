@@ -1,14 +1,15 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android' version '1.8.10'
+    //id 'org.jetbrains.kotlin.android' version '1.8.10'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
-// Añadir esto justo después de tus plugins
+
 def localPropertiesFile = rootProject.file('local.properties')
-def Properties localProperties = new Properties()
+Properties localProperties = new Properties()
 if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
 }
+
 android {
     namespace 'es.meliseoperez.safehaven'
     compileSdk 33
@@ -24,7 +25,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //Añadir la cofiguracón de IP como un campo de BuildConfig
         buildConfigField 'String', 'API_BASE_URL', "\"http://${localProperties['ip']}:8000/\""
-
     }
 
     buildTypes {
@@ -38,6 +38,36 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+}
+
+configurations {
+    // Crear una nueva configuración de dependencia resoluble que extienda 'implementation'
+    resolvableImplementation.extendsFrom implementation
+}
+
+task generateJavadoc(type: Javadoc) {
+    doFirst {
+        // Ensure that the build dependencies are included
+        classpath += configurations.implementation
+    }
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    include '**/*.java'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    exclude '**/*Test.java'
+    destinationDir = new File("${projectDir}/docs")
+    executable '/snap/android-studio/151/jbr/bin/javadoc'
+}
+
+task javadocJar(type: Jar, dependsOn: generateJavadoc) {
+    classifier = 'javadoc'
+    from generateJavadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
 }
 
 dependencies {
@@ -72,6 +102,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
 
 }

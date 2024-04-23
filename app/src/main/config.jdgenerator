@@ -1,0 +1,15 @@
+==== CONFIGS ====		
+{
+    "base_path": "/home/meliseo/SafeHaven/app/src/main",
+    "out": "/home/meliseo/SafeHaven/app/src/main/javadoc",
+    "javadoc_executable": "/usr/lib/jvm/java-11-openjdk-amd64/bin/",
+    "exclude": [],
+    "raw_params": ""
+}
+
+==== ERRORS ====
+	Could not find a valid javadoc executable located in: 
+	/usr/lib/jvm/java-11-openjdk-amd64/bin/
+	The javadoc executable path should end in with the executable file name and extension.
+
+
