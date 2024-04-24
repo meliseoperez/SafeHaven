@@ -524,8 +524,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public boolean accesoPermitido() {
         SharedPreferences prefs = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
-        String tipoUsuario = prefs.getString("tipo_usuario", "");
-        return !tipoUsuario.equals("basico"); // Suponiendo que "basico" indica un usuario sin acceso premium.
+        String tipoUsuario = prefs.getString("tipoUsuario", "");
+        return !tipoUsuario.equals("Básico"); // Suponiendo que "basico" indica un usuario sin acceso premium.
     }
 
     @Override
