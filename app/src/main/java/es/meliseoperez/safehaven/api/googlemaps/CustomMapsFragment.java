@@ -91,7 +91,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
 
                     // Mueve la cámara a la primera actualización de ubicación.
                     if (firstLocationUpdate) {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
                         firstLocationUpdate = false;
                     }
                 }
@@ -122,7 +122,7 @@ public class CustomMapsFragment extends Fragment implements OnMapReadyCallback {
                     } else {
                         myLocationMarker.setPosition(currentLocation);
                     }
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20));
                 }
             });
 
